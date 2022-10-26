@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {NextPage} from "next";
 import {Box, Button, FormControl, FormLabel, Heading, HStack, Input, Text, VStack} from "@chakra-ui/react";
 
-export const Register: NextPage = () => {
+export const Register: NextPage = (props) => {
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
     const [Name, setName] = useState("");
@@ -31,11 +31,7 @@ export const Register: NextPage = () => {
 
                 <FormControl>
                     <FormLabel>Name</FormLabel>
-                    <Input value={Name} onChange={(e) => setName(e.target.value)} rounded='none' variant={'filled'} type={'text'} id={'Name'} />
-                </FormControl>
-                <FormControl>
-                    <FormLabel>Phone Number</FormLabel>
-                    <Input value={phone} onChange={(e) => setPhone(e.target.value)} rounded='none' variant={'filled'} type={'tel'} id={'password'} />
+                    <Input value={Name} onChange={(e) => setName(e.target.value)} rounded='none' variant={'filled'} type={'text'} id={'Name'} placeholder={'Full Name'} />
                 </FormControl>
                 <FormControl>
                     <FormLabel>Email Address</FormLabel>
@@ -44,6 +40,10 @@ export const Register: NextPage = () => {
                 <FormControl>
                     <FormLabel>Password</FormLabel>
                     <Input value={pass} onChange={(e) => setPass(e.target.value)} rounded='none' variant={'filled'} type={'password'} id={'password'} />
+                </FormControl>
+                <FormControl>
+                    <FormLabel>Phone Number</FormLabel>
+                    <Input value={phone} onChange={(e) => setPhone(e.target.value)} rounded='none' variant={'filled'} type={'tel'} id={'password'} />
                 </FormControl>
                 {/*<HStack w={'full'} justify={'space-between'}>*/}
                 {/*    <Checkbox>Remember me</Checkbox>*/}
@@ -56,6 +56,9 @@ export const Register: NextPage = () => {
                         Create Account
                     </Button>
                 </HStack>
+                <Button onClick={() => props.onFormSwitch('register')} rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
+                    Already have an account? Login here.
+                </Button>
             </VStack>
         </Box>
     )

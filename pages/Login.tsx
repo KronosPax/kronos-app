@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {NextPage} from "next";
 import {Box, Button, FormControl, FormLabel, Heading, HStack, Input, Text, VStack} from "@chakra-ui/react";
 
-export const Login: NextPage = () => {
+export const Login: NextPage = (props) => {
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
 
@@ -45,7 +45,7 @@ export const Login: NextPage = () => {
                     <Button onClick={handleSubmit} rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
                         Login
                     </Button>
-                    <Button rounded={'none'} colorScheme={'blackAlpha'} w={['full', 'auto']}>
+                    <Button onClick={() => props} rounded={'none'} colorScheme={'blackAlpha'} w={['full', 'auto']}>
                         Register
                     </Button>
                 </HStack>

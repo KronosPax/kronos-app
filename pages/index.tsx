@@ -5,8 +5,12 @@ import {Register} from "./Register"
 
 const Home: NextPage = () => {
     const [currForm, setCurrForm] = useState('login')
+
+    const toggleForm = (formName) => {
+        setCurrForm(formName);
+    }
     return (<>{
-            currForm === 'login' ? <Login/> : <Register/>
+            currForm === "login" ? <Login onFormSwitch={toggleForm} /> : <Register onFormSwitch={toggleForm} />
     }</>
   )
 }
