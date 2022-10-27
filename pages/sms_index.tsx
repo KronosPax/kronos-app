@@ -1,6 +1,7 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+// pages/index.tsx
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
 import { BaseSyntheticEvent, useState } from 'react';
 
 const Home: NextPage = () => {
@@ -35,9 +36,8 @@ const Home: NextPage = () => {
         <div className={styles.container}>
             <Head>
                 <title>Kronos Pax Text Notification PoC</title>
-                <meta name="description" content="KronosPax Calender" />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
+
             <form className={styles.form} onSubmit={sendMessage}>
                 <h1 className={styles.title}>Send message using Twilio</h1>
                 <div className={styles.formGroup}>
@@ -76,5 +76,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-
