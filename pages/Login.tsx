@@ -1,14 +1,34 @@
 import React, {useState} from "react";
 import {NextPage} from "next";
 import {Box, Button, FormControl, FormLabel, Heading, HStack, Input, Text, VStack} from "@chakra-ui/react";
+import Link from "next/link";
 
-export const Login: NextPage = (props) => {
+
+export const Login: NextPage = () => {
     const [email, setEmail] = useState("");
-    const [pass, setPass] = useState("");
+    const [pwd, setPwd] = useState("");
+    const [badLogin, setBadLogin] = useState("");
 
-    const handleSubmit = () => {
-        //e.preventDefault();
-        console.log(email);
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        const loginInfo = {
+            email:email,
+            pwd:pwd
+        };
+        // window.location.href = "/Calendar";
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(loginInfo)
+        };
+
+        fetch('/api', requestOptions)
+            .then(response => response.json())
+            .then(data => {if(data == "user authorized"){
+                window.location.href = "/Calendar";
+        }else{
+                setBadLogin("true");
+            }});
     }
 
     return (
@@ -16,7 +36,7 @@ export const Login: NextPage = (props) => {
             w={['full', 'md']}
             p={[8,10]}
             mt={[20, '10vh']}
-            mx='auto'
+            mx={'auto'}
             border={['none', '1px']}
             borderColor={['', 'gray.300']}
             borderRadius={10}
@@ -33,7 +53,7 @@ export const Login: NextPage = (props) => {
                 </FormControl>
                 <FormControl>
                     <FormLabel>Password</FormLabel>
-                    <Input value={pass} onChange={(e) => setPass(e.target.value)} rounded='none' variant={'filled'} type={'password'} id={'password'} />
+                    <Input value={pwd} onChange={(e) => setPwd(e.target.value)} rounded='none' variant={'filled'} type={'password'} id={'password'} />
                 </FormControl>
                 {/*<HStack w={'full'} justify={'space-between'}>*/}
                 {/*    <Checkbox>Remember me</Checkbox>*/}
@@ -45,11 +65,13 @@ export const Login: NextPage = (props) => {
                     <Button onClick={handleSubmit} rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
                         Login
                     </Button>
-                    <Button onClick={() => props} rounded={'none'} colorScheme={'blackAlpha'} w={['full', 'auto']}>
-                        Register
+                    <Button rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
+                        <Link href="/Register">Register</Link>
                     </Button>
+
                 </HStack>
             </VStack>
         </Box>
     )
 }
+export default Login

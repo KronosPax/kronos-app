@@ -1,16 +1,36 @@
 import React, {useState} from "react";
 import {NextPage} from "next";
 import {Box, Button, FormControl, FormLabel, Heading, HStack, Input, Text, VStack} from "@chakra-ui/react";
+import Link from "next/link";
 
-export const Register: NextPage = (props) => {
+
+export const Register: NextPage = () => {
     const [email, setEmail] = useState("");
-    const [pass, setPass] = useState("");
-    const [Name, setName] = useState("");
+    const [pwd, setPwd] = useState("");
+    const [fName, setFName] = useState("");
+    const [lName, setLName] = useState("");
     const [phone, setPhone] = useState("");
 
-    const handleSubmit = () => {
-        //e.preventDefault();
-        console.log(Name);
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        const loginInfo = {
+            email:email,
+            pwd:pwd,
+            fName:fName,
+            lName:lName,
+            phone:phone
+        };
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(loginInfo)
+        };
+
+        fetch('/api', requestOptions)
+            .then(response => response.json())
+            .then(data => {if(data == "user created"){
+                window.location.href = "/Calendar";
+            }});
     }
 
     return (
@@ -30,8 +50,12 @@ export const Register: NextPage = (props) => {
                 </VStack>
 
                 <FormControl>
-                    <FormLabel>Name</FormLabel>
-                    <Input value={Name} onChange={(e) => setName(e.target.value)} rounded='none' variant={'filled'} type={'text'} id={'Name'} placeholder={'Full Name'} />
+                    <FormLabel>First Name</FormLabel>
+                    <Input value={fName} onChange={(e) => setFName(e.target.value)} rounded='none' variant={'filled'} type={'text'} id={'Name'} />
+                </FormControl>
+                <FormControl>
+                    <FormLabel>Last Name</FormLabel>
+                    <Input value={lName} onChange={(e) => setLName(e.target.value)} rounded='none' variant={'filled'} type={'text'} id={'Name'} />
                 </FormControl>
                 <FormControl>
                     <FormLabel>Email Address</FormLabel>
@@ -39,7 +63,7 @@ export const Register: NextPage = (props) => {
                 </FormControl>
                 <FormControl>
                     <FormLabel>Password</FormLabel>
-                    <Input value={pass} onChange={(e) => setPass(e.target.value)} rounded='none' variant={'filled'} type={'password'} id={'password'} />
+                    <Input value={pwd} onChange={(e) => setPwd(e.target.value)} rounded='none' variant={'filled'} type={'password'} id={'password'} />
                 </FormControl>
                 <FormControl>
                     <FormLabel>Phone Number</FormLabel>
@@ -55,11 +79,13 @@ export const Register: NextPage = (props) => {
                     <Button onClick={handleSubmit} rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
                         Create Account
                     </Button>
+                    <Button rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
+                        <Link href="/Login">Login Here</Link>
+                    </Button>
                 </HStack>
-                <Button onClick={() => props.onFormSwitch('register')} rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
-                    Already have an account? Login here.
-                </Button>
             </VStack>
         </Box>
     )
 }
+
+export default Register
