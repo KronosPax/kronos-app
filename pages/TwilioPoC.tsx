@@ -43,6 +43,7 @@ const Home: NextPage = () => {
                 <div className={styles.formGroup}>
                     <label htmlFor='phone'>Phone Number</label>
                     <input
+                        type={'password'}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder='Phone Number'
                         className={styles.input}
