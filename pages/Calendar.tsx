@@ -3,6 +3,7 @@ import {Box, Button, Heading, VStack} from "@chakra-ui/react";
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
+import mockCal from '../public/calPoC.png'
 
 export const Calendar: NextPage = () => {
 
@@ -18,7 +19,7 @@ export const Calendar: NextPage = () => {
         >
             <VStack align={'center'} w={'full'}>
                 <Heading>KronosPax Calendar</Heading>
-                <Image src={"/../public/calPoC.png"} width={900} height={800}/>
+                <Image src={mockCal} width={900} height={900}/>
                 <Button colorScheme={'blue'}>
                     <Link href="/TwilioPoC">Twilio PoC</Link>
                 </Button>
