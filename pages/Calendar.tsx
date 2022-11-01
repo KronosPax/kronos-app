@@ -1,5 +1,7 @@
 import {NextPage} from "next";
-import {Box, Heading, VStack} from "@chakra-ui/react";
+import {Box, Button, Heading, VStack} from "@chakra-ui/react";
+import Link from "next/link";
+import React from "react";
 
 export const Calendar: NextPage = () => {
 
@@ -13,8 +15,11 @@ export const Calendar: NextPage = () => {
             borderColor={['', 'gray.300']}
             borderRadius={10}
         >
-            <VStack spacing={4} align={'flex-start'} w={'full'}>
+            <VStack spacing={4} align={'center'} w={'full'}>
                 <Heading>KronosPax Calendar</Heading>
+                <Button colorScheme={'blue'}>
+                    <Link href="/TwilioPoC">Twilio PoC</Link>
+                </Button>
             </VStack>
         </Box>
     )
