@@ -11,4 +11,7 @@ export interface User {
     _id?: number
     email: string
     pwd: string
+    fName: string
+    lName: string
+    phone: string
 }

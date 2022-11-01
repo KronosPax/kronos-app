@@ -12,9 +12,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // Potential Responses
     const handleCase: ResponseFuncs = {
         // RESPONSE FOR GET REQUESTS
-        GET: async (req: NextApiRequest, res: NextApiResponse) => {
+        POST: async (req: NextApiRequest, res: NextApiResponse) => {
             const { User } = await connect() // connect to database
-            res.json(await User.find({}).catch(catcher))
+            res.json(await User.findOne({
+                email: req.body.email,
+                pwd: req.body.pwd}).catch(catcher))
         },
     }
 

@@ -1,34 +1,38 @@
 import React, {useState} from "react";
 import {NextPage} from "next";
-import {Box, Button, FormControl, FormLabel, Heading, HStack, Input, Text, VStack} from "@chakra-ui/react";
+import {
+    Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, FormControl, FormLabel, Heading, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, useDisclosure, VStack
+} from "@chakra-ui/react";
 import Link from "next/link";
 
 
 export const Login: NextPage = () => {
     const [email, setEmail] = useState("");
     const [pwd, setPwd] = useState("");
-    const [badLogin, setBadLogin] = useState("");
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const handleSubmit = (e: any) => {
+
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         const loginInfo = {
-            email:email,
-            pwd:pwd
+            email: email,
+            pwd: pwd
         };
-        // window.location.href = "/Calendar";
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(loginInfo)
         };
 
-        fetch('/api', requestOptions)
-            .then(response => response.json())
-            .then(data => {if(data == "user authorized"){
-                window.location.href = "/Calendar";
+        const res: Response = await fetch('/api/loginUser', requestOptions)
+        console.log(res)
+        const user = await res.json()
+        console.log(user)
+        if (user != null) {
+            location.href = "/Calendar";
         }else{
-                setBadLogin("true");
-            }});
+            onOpen();
+        }
     }
 
     return (
@@ -41,6 +45,20 @@ export const Login: NextPage = () => {
             borderColor={['', 'gray.300']}
             borderRadius={10}
         >
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalBody bg={"#fed7d7"} borderRadius={10}>
+                        <Alert status='error'>
+                            <AlertIcon />
+                            <AlertTitle>Login Error</AlertTitle>
+                            <AlertDescription>Your email or password are incorrect</AlertDescription>
+                        </Alert>
+                    </ModalBody>
+                    <ModalCloseButton />
+                </ModalContent>
+            </Modal>
+
             <VStack spacing={4} align={'flex-start'} w={'full'}>
                 <VStack spacing={1} w={'full'}>
                     <Heading>Login to KronosPax</Heading>
