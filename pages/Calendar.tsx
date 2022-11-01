@@ -19,7 +19,7 @@ export const Calendar: NextPage = () => {
         >
             <VStack align={'center'} w={'full'}>
                 <Heading>KronosPax Calendar</Heading>
-                <Image src={mockCal} width={900} height={900}/>
+                <Image src={mockCal}/>
                 <Button colorScheme={'blue'}>
                     <Link href="/TwilioPoC">Twilio PoC</Link>
                 </Button>
