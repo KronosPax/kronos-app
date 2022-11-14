@@ -1,10 +1,10 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {NextPage} from "next";
 import {
     Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, FormControl, FormLabel, Heading, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, useDisclosure, VStack
 } from "@chakra-ui/react";
 import Link from "next/link";
-import {signIn} from "next-auth/react";
+import {signIn, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 
 
@@ -13,7 +13,7 @@ export const Login: NextPage = () => {
     const [pwd, setPwd] = useState("");
     const { isOpen, onOpen, onClose } = useDisclosure();
     const router = useRouter()
-
+    const {status} = useSession()
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -24,12 +24,23 @@ export const Login: NextPage = () => {
             redirect: false
         });
         console.log(res)
-        if (res.status === 200){
+        if (res === undefined){
+            throw new Error('undefined')
+        }
+        if (res.ok === true){
             await router.push("/Calendar")
-        }else{
+        }
+        else{
             onOpen();
         }
     }
+
+
+
+    useEffect(() => {
+        if(status === "authenticated") router.replace("/Calendar");
+    }, [status]);
+
 
     return (
         <Box
@@ -82,7 +93,6 @@ export const Login: NextPage = () => {
                     <Button rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
                         <Link href="/Register">Register</Link>
                     </Button>
-
                 </HStack>
             </VStack>
         </Box>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, {useEffect} from "react";
 import Image from "next/image";
 import mockCal from '../public/calPoC.png'
-import { useSession } from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 
 const Calendar: NextPage = (): JSX.Element => {
@@ -30,6 +30,7 @@ const Calendar: NextPage = (): JSX.Element => {
                     <Heading>KronosPax Calendar</Heading>
                     <Heading>{JSON.stringify(data.user, null, 2)}</Heading>
                     <Image src={mockCal}/>
+                    <Button onClick={() => signOut()}>Sign out</Button>
                     <Button colorScheme={'blue'}>
                         <Link href="/TwilioPoC">Twilio PoC</Link>
                     </Button>

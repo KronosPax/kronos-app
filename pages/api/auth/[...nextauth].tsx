@@ -9,22 +9,30 @@ const authOptions: NextAuthOptions ={
         CredentialsProvider({
             type:"credentials",
             credentials: {},
-            async authorize(credentials, req) {
+            async authorize(credentials) {
                 const { email, password} = credentials as {
                     email: string;
                     password: string;
                 };
+                const loginInfo = {
+                    email: email,
+                    pwd: password
+                };
                 // do db check for login
-                
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(loginInfo)
+                };
 
-                //bad login res
-                if(email !== 'test@mail.com' || password !== 'test') {
+                const res: Response = await fetch('http://localhost:3000/api/loginUser', requestOptions)
+                const user = await res.json()
+                if (user === null) {
                     throw new Error('Invalid Credentials')
                 }
 
                 //good login res
-                // console.log('I made it to object res')
-                return {id: '1', name: 'John Doe', email: 'test@mail.com'};
+                return {id: user._id, name: user.fName +" "+ user.lName, email: user.email};
             },
         }),
     ],
