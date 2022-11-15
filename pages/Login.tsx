@@ -1,39 +1,46 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {NextPage} from "next";
 import {
     Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, FormControl, FormLabel, Heading, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, useDisclosure, VStack
 } from "@chakra-ui/react";
 import Link from "next/link";
+import {signIn, useSession} from "next-auth/react";
+import {useRouter} from "next/router";
 
 
 export const Login: NextPage = () => {
     const [email, setEmail] = useState("");
     const [pwd, setPwd] = useState("");
     const { isOpen, onOpen, onClose } = useDisclosure();
-
+    const router = useRouter()
+    const {status} = useSession()
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        const loginInfo = {
-            email: email,
-            pwd: pwd
-        };
-        const requestOptions = {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(loginInfo)
-        };
 
-        const res: Response = await fetch('/api/loginUser', requestOptions)
+        const res = await signIn('credentials', {
+            email: email,
+            password: pwd,
+            redirect: false
+        });
         console.log(res)
-        const user = await res.json()
-        console.log(user)
-        if (user != null) {
-            location.href = "/Calendar";
-        }else{
+        if (res === undefined){
+            throw new Error('undefined')
+        }
+        if (res.ok === true){
+            await router.push("/Calendar")
+        }
+        else{
             onOpen();
         }
     }
+
+
+
+    useEffect(() => {
+        if(status === "authenticated") router.replace("/Calendar");
+    }, [status]);
+
 
     return (
         <Box
@@ -86,7 +93,6 @@ export const Login: NextPage = () => {
                     <Button rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
                         <Link href="/Register">Register</Link>
                     </Button>
-
                 </HStack>
             </VStack>
         </Box>
