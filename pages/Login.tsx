@@ -1,16 +1,31 @@
 import React, {useState} from "react";
 import {NextPage} from "next";
+import {extendTheme, useColorMode} from '@chakra-ui/react' // Import the extendTheme function
+import { ColorModeScript } from '@chakra-ui/react'
+import { Switch } from '@chakra-ui/react'
+import { useBoolean } from '@chakra-ui/react'
+import theme from './api/theme'
+
+
+import {
+    Accordion,
+    AccordionItem,
+    AccordionButton,
+    AccordionPanel,
+    AccordionIcon,
+} from '@chakra-ui/react'
+
 import {
     Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, FormControl, FormLabel, Heading, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Text, useDisclosure, VStack
 } from "@chakra-ui/react";
 import Link from "next/link";
 
-
 export const Login: NextPage = () => {
     const [email, setEmail] = useState("");
     const [pwd, setPwd] = useState("");
     const { isOpen, onOpen, onClose } = useDisclosure();
-
+    const { colorMode, toggleColorMode } = useColorMode() //color mode constant set (chakra ui stuff)
+    const [flag, setFlag] = useBoolean() //boolean constant set (chakra ui stuff)
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -71,22 +86,16 @@ export const Login: NextPage = () => {
                 </FormControl>
                 <FormControl>
                     <FormLabel>Password</FormLabel>
-                    <Input value={pwd} onChange={(e) => setPwd(e.target.value)} rounded='none' variant={'filled'} type={'password'} id={'password'} />
+                    <Input value={pwd} onChange={(e) =>
+                        setPwd(e.target.value)} rounded='none' variant={'filled'} type={'password'} id={'password'}/>
                 </FormControl>
-                {/*<HStack w={'full'} justify={'space-between'}>*/}
-                {/*    <Checkbox>Remember me</Checkbox>*/}
-                {/*    <Button variant={'link'} colorScheme={'blue'}>*/}
-                {/*        Forgot Password*/}
-                {/*    </Button>*/}
-                {/*</HStack>*/}
                 <HStack w={'full'} justify={'space-between'}>
                     <Button onClick={handleSubmit} rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
                         Login
                     </Button>
-                    <Button rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
+                    <Button rounded={'none'} w={['full', 'auto']}>
                         <Link href="/Register">Register</Link>
                     </Button>
-
                 </HStack>
             </VStack>
         </Box>

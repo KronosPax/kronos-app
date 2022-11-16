@@ -36,7 +36,7 @@ const Home: NextPage = () => {
             <Head>
                 <title>Kronos Pax Text Notification PoC</title>
                 <meta name="description" content="KronosPax Calender" />
-                <link rel="icon" href="/favicon.ico" />
+
             </Head>
             <form className={styles.form} onSubmit={sendMessage}>
                 <h1 className={styles.title}>Send message using Twilio</h1>

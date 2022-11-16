@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {NextPage} from "next";
+import { Switch } from '@chakra-ui/react'
 import {
     Alert, AlertDescription, AlertIcon, AlertTitle,
     Box,
@@ -99,6 +100,12 @@ export const Register: NextPage = () => {
                 <FormControl>
                     <FormLabel>Phone Number</FormLabel>
                     <Input value={phone} onChange={(e) => setPhone(e.target.value)} rounded='none' variant={'filled'} type={'tel'} id={'phone'} />
+                </FormControl>
+                <FormControl display='flex' alignItems='center'>
+                    <FormLabel htmlFor='text-alerts' mb='0'>
+                        Enable text message alerts?
+                    </FormLabel>
+                    <Switch id='text-alerts' />
                 </FormControl>
                 {/*<HStack w={'full'} justify={'space-between'}>*/}
                 {/*    <Checkbox>Remember me</Checkbox>*/}

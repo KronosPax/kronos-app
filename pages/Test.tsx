@@ -1,5 +1,6 @@
 import React, {ReactNode, useState} from "react";
 import {NextPage} from "next";
+import brand from './api/theme';
 import { HexColorPicker , HexColorInput , RgbaColorPicker } from "react-colorful"; // color picker and color input
 import {
     Accordion,
@@ -24,6 +25,7 @@ import {
     DrawerHeader,
     DrawerOverlay,
     DrawerContent,
+    extendTheme,
     Flex,
     FormControl,
     FormLabel,
@@ -66,59 +68,39 @@ import {Logo} from "./Logo";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-    <Link
-        px={2} py={1} rounded={'md'} _hover={{
-        textDecoration: 'none',
-        bg: useColorModeValue('gray.200', 'gray.700'),
-    }} href={'#'}>
-        {children}
-    </Link>
-);
 
-
-
-export const Cal: NextPage = () => {
+export const Test: NextPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { colorMode, toggleColorMode } = useColorMode() //color mode constant set (chakra ui stuff)
+    const [flag, setFlag] = useBoolean() //boolean constant set (chakra ui stuff)
+    const btnRef = React.useRef()
     const [date, setDate] = useState(new Date())
     const [color, setColor] = useState("#aabbcc");
 
-    const handleSubmit = async (e: any) => {
-        onOpen();
-    }
+    const customTheme = extendTheme({ colorScheme: 'brand' })
+
+
+    const initialFocusRef = React.useRef()
+
     return (
         <>
-            {/* Header and Toggle Color Test    */}
-            <Box bg={useColorModeValue('gray.100', 'brand.200')} px={4}>
-                {/* <Logo h={16} pointerEvents="none" /> */}
-                        <HStack w={'full'} justify={'right'}>
-                            <Flex alignItems={'center'}>
-                                <Stack direction={'row'} spacing={7}>
-                                    <Button onClick={toggleColorMode}>
-                                        {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-                                    </Button>
-                                </Stack>
-                            </Flex>
-                        </HStack>
-            </Box>
 
-                {/* Calendar  */}
                 <Box>
-                <VStack spacing={4} align={'flex-start'} w={'full'}>
-                    <VStack spacing={1} w={'full'}>
-                        <Box className="calendar-container">
-                            <Calendar onChange={setDate} value={date}/>
-                        </Box>
-                        <Box className="text-center">
-                            Selected date: {date.toDateString()}
-                        </Box>
+                    {/* Calendar  */}
+                    <VStack spacing={4} align={'flex-start'} w={'full'}>
+                        <VStack spacing={1} w={'full'}>
+                            <Box className="calendar-container">
+                                <Calendar onChange={setDate} value={date}/>
+                            </Box>
+                            <Box className="text-center">
+                                Selected date: {date.toDateString()}
+                            </Box>
+                        </VStack>
+                        {/* END Calendar  */}
                     </VStack>
-                </VStack>
                 </Box>
-                {/* END Calendar  */}
         </>
     );
 }
 
-export default Cal
+export default Test
