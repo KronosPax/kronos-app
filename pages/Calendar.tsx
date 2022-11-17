@@ -12,7 +12,7 @@ const Calendar: NextPage = () => {
     const router = useRouter()
 
     useEffect(() => {
-        if(status === "unauthenticated") router.replace("/Login");
+        if(status === "unauthenticated") router.replace("/");
     }, [status]);
 
     if(status === "authenticated")

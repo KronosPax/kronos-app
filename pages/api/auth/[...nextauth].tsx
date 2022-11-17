@@ -25,7 +25,11 @@ const authOptions: NextAuthOptions ={
                     body: JSON.stringify(loginInfo)
                 };
 
-                const res: Response = await fetch('http://localhost:3000/api/loginUser', requestOptions)
+                const res: Response = await fetch('http://localhost:3000/api/auth/loginUser', requestOptions)
+                if (!res.ok){
+                    throw Error('Bad Connection to DB')
+                }
+
                 const user = await res.json()
                 if (user === null) {
                     throw new Error('Invalid Credentials')

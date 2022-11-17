@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { connect } from "../../utils/connection"
-import { ResponseFuncs } from "../../utils/types"
+import { connect } from "../../../utils/connection"
+import { ResponseFuncs } from "../../../utils/types"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -11,12 +11,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Potential Responses
     const handleCase: ResponseFuncs = {
-        // RESPONSE FOR GET REQUESTS
+        // RESPONSE POST REQUESTS
         POST: async (req: NextApiRequest, res: NextApiResponse) => {
             const { User } = await connect() // connect to database
-            res.json(await User.findOne({
-                email: req.body.email,
-                pwd: req.body.pwd}).catch(catcher))
+            res.json(await User.create(req.body).catch(catcher))
         },
     }
 
