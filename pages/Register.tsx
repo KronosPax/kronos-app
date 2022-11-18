@@ -49,12 +49,14 @@ export const Register: NextPage = () => {
 
         const res: Response = await fetch('/api/auth/registerUser', requestOptions)
         console.log(res)
-        const user = await res.json()
-        console.log(user)
-        if (user != null) {
-            await router.push("/")
-        } else {
+        if (!res.ok) {
             onOpen();
+            const badRes = await res.json()
+            console.log(badRes.error)
+        }else{
+            const user = await res.json()
+            console.log(user)
+            await router.push("/")
         }
     }
 

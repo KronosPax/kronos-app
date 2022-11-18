@@ -27,7 +27,7 @@ const authOptions: NextAuthOptions ={
 
                 const res: Response = await fetch('http://localhost:3000/api/auth/loginUser', requestOptions)
                 if (!res.ok){
-                    throw Error('Bad Connection to DB')
+                    throw new Error('Bad Connection to DB')
                 }
 
                 const user = await res.json()
