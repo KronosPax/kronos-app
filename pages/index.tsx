@@ -3,9 +3,10 @@ import {Login} from "./Login";
 
 const Home: NextPage = () => {
 
-    return (<>{
-            <Login/>
-    }</>
+    return (
+            <>
+                <Login/>
+            </>
   )
 }
 

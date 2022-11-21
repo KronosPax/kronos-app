@@ -1,7 +1,9 @@
 import React, {useState} from "react";
 import {NextPage} from "next";
 import {
-    Alert, AlertDescription, AlertIcon, AlertTitle,
+    Alert,
+    AlertIcon,
+    AlertTitle,
     Box,
     Button,
     FormControl,
@@ -29,6 +31,7 @@ export const Register: NextPage = () => {
     const [lName, setLName] = useState("");
     const [phone, setPhone] = useState("");
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [regError, setRegError] = useState("")
     const router = useRouter()
 
 
@@ -50,9 +53,9 @@ export const Register: NextPage = () => {
         const res: Response = await fetch('/api/auth/registerUser', requestOptions)
         console.log(res)
         if (!res.ok) {
-            onOpen();
             const badRes = await res.json()
-            console.log(badRes.error)
+            setRegError(badRes.error)
+            onOpen();
         }else{
             const user = await res.json()
             console.log(user)
@@ -76,8 +79,7 @@ export const Register: NextPage = () => {
                     <ModalBody bg={"#fed7d7"} borderRadius={10}>
                         <Alert status='error'>
                             <AlertIcon/>
-                            <AlertTitle>User creation error</AlertTitle>
-                            <AlertDescription>Your account was not created</AlertDescription>
+                            <AlertTitle>{regError}</AlertTitle>
                         </Alert>
                     </ModalBody>
                     <ModalCloseButton/>
