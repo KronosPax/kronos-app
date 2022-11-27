@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { connect } from "../../utils/connection"
-import { ResponseFuncs } from "../../utils/types"
+import { connect } from "../../../utils/connection"
+import { ResponseFuncs } from "../../../utils/types"
+import { hash } from "bcrypt"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -14,7 +15,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // RESPONSE POST REQUESTS
         POST: async (req: NextApiRequest, res: NextApiResponse) => {
             const { User } = await connect() // connect to database
-            res.json(await User.create(req.body).catch(catcher))
+            if (await User.findOne({
+                email: req.body.email}) !== null){
+                    console.log("user exist")
+                    res.status(400).json({ error: "Email in Use" })
+            }else{
+                console.log("creating new user")
+                const saltRounds = 10;
+                hash(req.body.pwd, saltRounds, async function (err, hash) {
+                    req.body.pwd = hash
+                    await User.create(req.body).catch(catcher)
+                    res.status(200).json({ message: "User Created" })});
+            }
         },
     }
 

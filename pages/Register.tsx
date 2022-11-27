@@ -1,19 +1,27 @@
 import React, {useState} from "react";
 import {NextPage} from "next";
 import {
-    Alert, AlertDescription, AlertIcon, AlertTitle,
+    Alert,
+    AlertIcon,
+    AlertTitle,
     Box,
     Button,
     FormControl,
     FormLabel,
     Heading,
     HStack,
-    Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay,
+    Input,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalOverlay,
     Text,
     useDisclosure,
     VStack
 } from "@chakra-ui/react";
 import Link from "next/link";
+import {useRouter} from "next/router";
 
 
 export const Register: NextPage = () => {
@@ -23,6 +31,9 @@ export const Register: NextPage = () => {
     const [lName, setLName] = useState("");
     const [phone, setPhone] = useState("");
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [regError, setRegError] = useState("")
+    const router = useRouter()
+
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -39,14 +50,16 @@ export const Register: NextPage = () => {
             body: JSON.stringify(registerInfo)
         };
 
-        const res: Response = await fetch('/api/registerUser', requestOptions)
+        const res: Response = await fetch('/api/auth/registerUser', requestOptions)
         console.log(res)
-        const user = await res.json()
-        console.log(user)
-        if (user != null) {
-            location.href = "/Login";
-        } else {
+        if (!res.ok) {
+            const badRes = await res.json()
+            setRegError(badRes.error)
             onOpen();
+        }else{
+            const user = await res.json()
+            console.log(user)
+            await router.push("/")
         }
     }
 
@@ -61,16 +74,15 @@ export const Register: NextPage = () => {
             borderRadius={10}
         >
             <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
+                <ModalOverlay/>
                 <ModalContent>
                     <ModalBody bg={"#fed7d7"} borderRadius={10}>
                         <Alert status='error'>
-                            <AlertIcon />
-                            <AlertTitle>User creation error</AlertTitle>
-                            <AlertDescription>Your account was not created</AlertDescription>
+                            <AlertIcon/>
+                            <AlertTitle>{regError}</AlertTitle>
                         </Alert>
                     </ModalBody>
-                    <ModalCloseButton />
+                    <ModalCloseButton/>
                 </ModalContent>
             </Modal>
 

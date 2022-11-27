@@ -13,12 +13,12 @@ export const connect = async () => {
 
     // OUR USER SCHEMA
     const UserSchema = new mongoose.Schema({
-        email: String,
-        pwd: String,
-        fName: String,
-        lName: String,
+        email: {type: String, required: true},
+        pwd: {type: String, required: true},
+        fName: {type: String, required: true},
+        lName: {type: String, required: true},
         phone: String,
-    })
+    });
 
     // OUR USER MODEL
     const User = mongoose.models.User || mongoose.model("User", UserSchema)

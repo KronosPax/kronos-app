@@ -8,6 +8,7 @@ function MyApp({ Component, pageProps }: AppProps<{session:Session}>) {
   return (
       <SessionProvider session={pageProps.session}>
           <ChakraProvider>
+              <link rel="icon" href="/KP_Transparent.ico"/>
               <Component {...pageProps} />
           </ChakraProvider>
       </SessionProvider>
