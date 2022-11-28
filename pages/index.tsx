@@ -5,6 +5,7 @@ const Home: NextPage = () => {
 
     return (
             <>
+                <title> KronosPax Calendar</title>
                 <Login/>
             </>
   )
