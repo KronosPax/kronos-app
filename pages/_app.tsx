@@ -3,6 +3,10 @@ import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 import {SessionProvider} from "next-auth/react";
 import {Session} from "next-auth";
+import '@fullcalendar/common/main.css'
+import '@fullcalendar/daygrid/main.css'
+import '@fullcalendar/timegrid/main.css'
+
 
 function MyApp({ Component, pageProps }: AppProps<{session:Session}>) {
   return (
