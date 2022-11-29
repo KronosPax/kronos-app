@@ -17,6 +17,12 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
 
+//With the way things have been configured we would edit and create our FullCalendar component
+// in this file then import it to use it where necessary
+// I don't really know exactly what this does I grabbed it from
+// https://github.com/fullcalendar/fullcalendar-example-projects/blob/master/react-typescript/src/DemoApp.tsx
+// we would probably want to start from scratch going off the documentation found here
+// https://fullcalendar.io/docs
 interface MyCalendarState {
     weekendsVisible: boolean
     currentEvents: EventApi[]
