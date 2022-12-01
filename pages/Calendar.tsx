@@ -21,7 +21,7 @@ const Calendar: NextPage = () => {
     if(status === "authenticated")
         return (
             <Box>
-                <VStack align={'center'} w={'full'}>
+            {/*//     <VStack align={'center'} w={'full'}>*/}
                     <Heading>KronosPax Calendar</Heading>
                     {/*<Heading>{JSON.stringify(data.user, null, 2)}</Heading>*/}
                     {/*<Image src={mockCal}/>*/}
@@ -30,7 +30,7 @@ const Calendar: NextPage = () => {
                     <Button colorScheme={'blue'}>
                         <Link href="/TwilioPoC">Twilio PoC</Link>
                     </Button>
-                </VStack>
+            {/*//     </VStack>*/}
             </Box>
         )
     return <Box>
