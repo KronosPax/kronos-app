@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+
+/* const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
 }
 
 module.exports = nextConfig
+*/
 
 const withTM = require('next-transpile-modules')([
   "@fullcalendar/common",
@@ -12,13 +14,11 @@ const withTM = require('next-transpile-modules')([
   "@fullcalendar/timegrid",
   "@fullcalendar/interaction",
   "@fullcalendar/react",
+  "@fullcalendar/core",
+  "@fullcalendar/list"
 ]);
 
 module.exports = withTM({
-  images: {
-    domains: [
-        'media.giphy.com',
-        'giphy.com'
-    ]
-  }
+  reactStrictMode: true,
+  swcMinify: true,
 });

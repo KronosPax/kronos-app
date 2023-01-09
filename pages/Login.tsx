@@ -6,7 +6,8 @@ import {
 import Link from "next/link";
 import {signIn, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
-
+import { extendTheme } from "@chakra-ui/react"
+import theme from "../styles/theme";
 
 export const Login: NextPage = () => {
     const [email, setEmail] = useState("");
@@ -14,6 +15,21 @@ export const Login: NextPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const router = useRouter()
     const {status} = useSession()
+    const customTheme = extendTheme({ colorScheme: theme })
+    const theme1 = extendTheme({
+        colors: {
+            brand: {
+                900: '#1a365d',
+                800: '#153e75',
+                700: '#2a69ac',
+                600: '#237099',
+                500: '#6eccff',
+                400: '#e6a24c',
+                100: "#f7fafc",
+                200: "#1a202c",
+            },
+        },
+    })
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -40,7 +56,6 @@ export const Login: NextPage = () => {
     useEffect(() => {
         if(status === "authenticated") router.replace("/Calendar");
     }, [status]);
-
 
     return (
         <Box
@@ -90,7 +105,7 @@ export const Login: NextPage = () => {
                     <Button onClick={handleSubmit} rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
                         Login
                     </Button>
-                    <Button rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
+                    <Button rounded={'none'} bg='brand.400' w={['full', 'auto']}>
                         <Link href="/Register">Register</Link>
                     </Button>
                 </HStack>
