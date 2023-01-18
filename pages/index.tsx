@@ -1,13 +1,22 @@
 import type { NextPage } from 'next'
-import {Login} from "./Login";
+import * as React from 'react'
+import { extendTheme, ChakraProvider } from '@chakra-ui/react' //import `ChakraProvider` and 'extendTheme' component
+import {Landing} from "./Landing";
 
 const Home: NextPage = () => {
 
     return (
+<<<<<<< Updated upstream
             <>
                 <Login/>
             </>
   )
+=======
+        <ChakraProvider>{
+            <Landing/>
+        }</ChakraProvider>
+    )
+>>>>>>> Stashed changes
 }
 
 export default Home
