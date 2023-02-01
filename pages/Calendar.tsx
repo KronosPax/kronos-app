@@ -2,10 +2,12 @@ import {NextPage} from "next";
 import {Box, Button, Heading, VStack} from "@chakra-ui/react";
 import Link from "next/link";
 import React, {useEffect} from "react";
+import Image from "next/image";
+import mockCal from '../public/calPoC.png'
 import {signOut, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 
-export const Calendar: NextPage = () => {
+const Calendar: NextPage = () => {
     const {status, data} = useSession()
     const router = useRouter()
 
@@ -27,6 +29,7 @@ export const Calendar: NextPage = () => {
                 <VStack align={'center'} w={'full'}>
                     <Heading>KronosPax Calendar</Heading>
                     <Heading>{JSON.stringify(data.user, null, 2)}</Heading>
+                    <Image src={mockCal}/>
                     <Button onClick={() => signOut({redirect:false})}>Sign out</Button>
                     <Button colorScheme={'blue'}>
                         <Link href="/TwilioPoC">Twilio PoC</Link>
