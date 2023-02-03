@@ -86,7 +86,7 @@ const Calendar: NextPage = () => {
                             </CardFooter>
                         </Card>
                     </SimpleGrid>
-                    <Button onClick={() => signOut({redirect: false})}>Sign out</Button>
+                    {/*<Button onClick={() => signOut({redirect: false})}>Sign out</Button>*/}
                     <Button colorScheme={'blue'}>
                         <Link href="/TwilioPoC">Twilio PoC</Link>
                     </Button>
