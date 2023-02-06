@@ -1,6 +1,13 @@
 import NextAuth, {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
 
+// using nextauth for session management with json webtoken credential manager to interface with internal DB
+// protected pages should import {useSession} from "next-auth/react"; to have access to session for auth
+// ex: const {status, data} = useSession()
+//     useEffect(() => {
+//         if (status === "unauthenticated") router.replace("/");
+//     }, [status]);
+
 const authOptions: NextAuthOptions ={
     session: {
         strategy: "jwt"
@@ -18,7 +25,6 @@ const authOptions: NextAuthOptions ={
                     email: email,
                     pwd: password
                 };
-                // do db check for login
                 const requestOptions = {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -35,7 +41,7 @@ const authOptions: NextAuthOptions ={
                     throw new Error('Invalid Credentials')
                 }
 
-                //good login res
+                //json response on good login
                 return {id: user._id, name: user.fName +" "+ user.lName, email: user.email};
             },
         }),

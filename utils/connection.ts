@@ -1,4 +1,3 @@
-//IMPORT MONGOOSE
 import mongoose, { Model } from "mongoose";
 
 // CONNECTING TO MONGOOSE (Get Database Url from .env.local)

@@ -3,6 +3,8 @@ import { connect } from "../../../utils/connection"
 import { ResponseFuncs } from "../../../utils/types"
 import { compare } from "bcrypt"
 
+// Called by nextauth signIn() compared recieved data against DB entries looks for match
+// Using mongoose to interface with MongoDB instance, schema and model are defined in connections.ts
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     //capture request method, we type it as a key of ResponseFunc to reduce typing later
     const method: keyof ResponseFuncs = req.method as keyof ResponseFuncs
@@ -20,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 email: req.body.email})
 
             console.log(user)
-
+            // compare() is for comparing plaintxt to hashed passwords with bcypt
             if (user !== null){
                 compare(req.body.pwd, user.pwd, function(err, result) {
                     if (result) {
