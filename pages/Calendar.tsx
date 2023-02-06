@@ -26,73 +26,71 @@ const Calendar: NextPage = () => {
     // }, [status]);
 
     // if (status === "authenticated") {
-        return (
-            <Box
-                w={['full', '5xl']}
-                p={[8, 10]}
-                // mt={[20, '10vh']}
-                mx='auto'
-                // border={['none', '1px']}
-                // borderColor={['', 'gray.300']}
-                // borderRadius={10}
-            >
-                <VStack>
-                    <Heading>KronosPax</Heading>
-
-                    <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
-                        <Card align={'center'}>
-                            <CardHeader>
-                                <Heading size='md'> Customer dashboard</Heading>
-                            </CardHeader>
-                            <CardBody>
-                                View a summary of all your customers over the last month.
-                                View a summary of all your customers over the last month.
-                            </CardBody>
-                            <CardFooter>
-                                <Button>View here</Button>
-                            </CardFooter>
-                        </Card>
-                        <Card align={'center'}>
-                            <CardHeader>
-                                <Heading size='md'> Customer dashboard</Heading>
-                            </CardHeader>
-                            <CardBody>
-                                View a summary of all your customers over the last month.
-                            </CardBody>
-                            <CardFooter>
-                                <Button>View here</Button>
-                            </CardFooter>
-                        </Card>
-                        <Card align={'center'}>
-                            <CardHeader>
-                                <Heading size='md'> Customer dashboard</Heading>
-                            </CardHeader>
-                            <CardBody>
-                                View a summary of all your customers over the last month.
-                            </CardBody>
-                            <CardFooter>
-                                <Button>View here</Button>
-                            </CardFooter>
-                        </Card>
-                        <Card align={'center'}>
-                            <CardHeader>
-                                <Heading size='md'> Customer dashboard</Heading>
-                            </CardHeader>
-                            <CardBody>
-                                View a summary of all your customers over the last month.
-                            </CardBody>
-                            <CardFooter>
-                                <Button>View here</Button>
-                            </CardFooter>
-                        </Card>
-                    </SimpleGrid>
-                    {/*<Button onClick={() => signOut({redirect: false})}>Sign out</Button>*/}
-                    <Button colorScheme={'blue'}>
-                        <Link href="/TwilioPoC">Twilio PoC</Link>
-                    </Button>
-                </VStack>
-            </Box>
-        )
+    return (
+        <Box
+            // w={['full', '5xl']}
+            p={[8, 10]}
+            // mt={[20, '10vh']}
+            // mx='auto'
+            // border={['none', '1px']}
+            // borderColor={['', 'gray.300']}
+            // borderRadius={10}
+        >
+            <Heading>KronosPax</Heading>
+            <VStack align={"stretch"} >
+                <SimpleGrid spacing={4}>
+                    <Card align={'center'}>
+                        <CardHeader>
+                            <Heading size='md'> Customer dashboard</Heading>
+                        </CardHeader>
+                        <CardBody>
+                            View a summary of all your customers over the last month.
+                        </CardBody>
+                        <CardFooter>
+                            <Button>View here</Button>
+                        </CardFooter>
+                    </Card>
+                    <Card align={'center'}>
+                        <CardHeader>
+                            <Heading size='md'> Customer dashboard</Heading>
+                        </CardHeader>
+                        <CardBody>
+                            View a summary of all your customers over the last month.
+                        </CardBody>
+                        <CardFooter>
+                            <Button>View here</Button>
+                        </CardFooter>
+                    </Card>
+                    <Card align={'center'}>
+                        <CardHeader>
+                            <Heading size='md'> Customer dashboard</Heading>
+                        </CardHeader>
+                        <CardBody>
+                            View a summary of all your customers over the last month.
+                        </CardBody>
+                        <CardFooter>
+                            <Button>View here</Button>
+                        </CardFooter>
+                    </Card>
+                    <Card align={'center'}>
+                        <CardHeader>
+                            <Heading size='md'> Customer dashboard</Heading>
+                        </CardHeader>
+                        <CardBody>
+                            View a summary of all your customers over the last month.
+                        </CardBody>
+                        <CardFooter>
+                            <Button>View here</Button>
+                        </CardFooter>
+                    </Card>
+                </SimpleGrid>
+                {/*<Button onClick={() => signOut({redirect: false})}>Sign out</Button>*/}
+                <Button colorScheme={'blue'}>
+                    <Link href="/TwilioPoC">Twilio PoC</Link>
+                </Button>
+            </VStack>
+        </Box>
+    )
     // }
     // return <Box>Loading</Box>
 }
