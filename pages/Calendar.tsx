@@ -6,6 +6,7 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
+    Flex,
     Heading,
     SimpleGrid,
     VStack
@@ -18,6 +19,19 @@ import Link from "next/link";
 // import {useRouter} from "next/router";
 
 const Calendar: NextPage = () => {
+
+    const FloatingNavbar = () => (
+        <>
+            <Flex as={'header'} position={"fixed"} w={'100%'} align={"center"} justify={"space-between"}
+                  backgroundColor="rgba(255,255, 255, 0.8)" backdropFilter="saturate(180%) blur(5px)"
+                  zIndex={'50'} p={1}
+            >
+                <Heading>KronosPax</Heading>
+                <Heading>KronosPax</Heading>
+            </Flex>
+        </>
+    );
+
     // const {status, data} = useSession()
     // const router = useRouter()
 
@@ -27,69 +41,63 @@ const Calendar: NextPage = () => {
 
     // if (status === "authenticated") {
     return (
-        <Box
-            // w={['full', '5xl']}
-            p={[8, 10]}
-            // mt={[20, '10vh']}
-            // mx='auto'
-            // border={['none', '1px']}
-            // borderColor={['', 'gray.300']}
-            // borderRadius={10}
-        >
-            <Heading>KronosPax</Heading>
-            <VStack align={"stretch"} >
-                <SimpleGrid spacing={4}>
-                    <Card align={'center'}>
-                        <CardHeader>
-                            <Heading size='md'> Customer dashboard</Heading>
-                        </CardHeader>
-                        <CardBody>
-                            View a summary of all your customers over the last month.
-                        </CardBody>
-                        <CardFooter>
-                            <Button>View here</Button>
-                        </CardFooter>
-                    </Card>
-                    <Card align={'center'}>
-                        <CardHeader>
-                            <Heading size='md'> Customer dashboard</Heading>
-                        </CardHeader>
-                        <CardBody>
-                            View a summary of all your customers over the last month.
-                        </CardBody>
-                        <CardFooter>
-                            <Button>View here</Button>
-                        </CardFooter>
-                    </Card>
-                    <Card align={'center'}>
-                        <CardHeader>
-                            <Heading size='md'> Customer dashboard</Heading>
-                        </CardHeader>
-                        <CardBody>
-                            View a summary of all your customers over the last month.
-                        </CardBody>
-                        <CardFooter>
-                            <Button>View here</Button>
-                        </CardFooter>
-                    </Card>
-                    <Card align={'center'}>
-                        <CardHeader>
-                            <Heading size='md'> Customer dashboard</Heading>
-                        </CardHeader>
-                        <CardBody>
-                            View a summary of all your customers over the last month.
-                        </CardBody>
-                        <CardFooter>
-                            <Button>View here</Button>
-                        </CardFooter>
-                    </Card>
-                </SimpleGrid>
-                {/*<Button onClick={() => signOut({redirect: false})}>Sign out</Button>*/}
-                <Button colorScheme={'blue'}>
-                    <Link href="/TwilioPoC">Twilio PoC</Link>
-                </Button>
-            </VStack>
-        </Box>
+        <>
+            <FloatingNavbar/>
+            <Box p={55}>
+                <VStack align={"stretch"}>
+                    <SimpleGrid spacing={4}>
+                        <Card align={'center'}>
+                            <CardHeader>
+                                <Heading size='md'> Customer dashboard</Heading>
+                            </CardHeader>
+                            <CardBody>
+                                View a summary of all your customers over the last month.
+                            </CardBody>
+                            <CardFooter>
+                                <Button>View here</Button>
+                            </CardFooter>
+                        </Card>
+                        <Card align={'center'}>
+                            <CardHeader>
+                                <Heading size='md'> Customer dashboard</Heading>
+                            </CardHeader>
+                            <CardBody>
+                                View a summary of all your customers over the last month.
+                            </CardBody>
+                            <CardFooter>
+                                <Button>View here</Button>
+                            </CardFooter>
+                        </Card>
+                        <Card align={'center'}>
+                            <CardHeader>
+                                <Heading size='md'> Customer dashboard</Heading>
+                            </CardHeader>
+                            <CardBody>
+                                View a summary of all your customers over the last month.
+                            </CardBody>
+                            <CardFooter>
+                                <Button>View here</Button>
+                            </CardFooter>
+                        </Card>
+                        <Card align={'center'}>
+                            <CardHeader>
+                                <Heading size='md'> Customer dashboard</Heading>
+                            </CardHeader>
+                            <CardBody>
+                                View a summary of all your customers over the last month.
+                            </CardBody>
+                            <CardFooter>
+                                <Button>View here</Button>
+                            </CardFooter>
+                        </Card>
+                    </SimpleGrid>
+                    {/*<Button onClick={() => signOut({redirect: false})}>Sign out</Button>*/}
+                    <Button colorScheme={'blue'}>
+                        <Link href="/TwilioPoC">Twilio PoC</Link>
+                    </Button>
+                </VStack>
+            </Box>
+        </>
     )
     // }
     // return <Box>Loading</Box>
