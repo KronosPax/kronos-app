@@ -28,7 +28,7 @@ export const Login: NextPage = () => {
             throw new Error('undefined')
         }
         if (res.ok === true){
-            await router.push("/Calendar")
+            await router.push("/TaskTracker")
         }
         else{
             onOpen();
@@ -38,7 +38,7 @@ export const Login: NextPage = () => {
 
 
     useEffect(() => {
-        if(status === "authenticated") router.replace("/Calendar");
+        if(status === "authenticated") router.replace("/TaskTracker");
     }, [status]);
 
 
