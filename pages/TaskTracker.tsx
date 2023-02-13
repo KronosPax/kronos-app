@@ -1,19 +1,16 @@
 import {NextPage} from "next";
 import {
     Box,
-    Button,
     Card,
-    CardBody,
-    CardFooter,
     CardHeader,
     Heading,
     useColorMode,
-    SimpleGrid,
     AccordionItem,
     Accordion,
     AccordionButton,
     AccordionIcon,
-    AccordionPanel
+    AccordionPanel,
+    Flex
 } from "@chakra-ui/react";
 import React from "react";
 import FloatingNavbar from "../components/FloatingNavbar";
@@ -70,18 +67,27 @@ const TaskTracker: NextPage = () => {
     }
 
     const task: Task[] = [
-        {taskID: 1, className: 'nerp', taskName: 'test1', desc: 'test1 desc', dateDue: '1/1/23', isTextAlert: false},
-        {taskID: 2, className: 'nerp', taskName: 'test2', desc: 'test2 desc', dateDue: '2/2/23', isTextAlert: true},
-        {taskID: 3, className: 'derp', taskName: 'test3', desc: 'test3 desc', dateDue: '3/3/23', isTextAlert: false},
-        {taskID: 4, className: 'yerp', taskName: 'test4', desc: 'test4 desc', dateDue: '3/3/23', isTextAlert: false},
+        //TaskName has a limit of 20 chars
+        {
+            taskID: 1,
+            className: 'nerp',
+            taskName: '12345123451234512345',
+            desc: 'test1 desc' +
+                'jahdsfjkhasdlfjlkasdjfkl;asdjfkl;jasdl;' +
+                'akdjfl;kajsdl;fkja;lsdkfj;asldjfal;skdfjasdfl;' +
+                'alsdkfjakl;jsdfl;kjasl;dkjfkl;ajsdfkljasdlfk;jasdfkljas' +
+                'aksdljfklasjdflk;jasdkl;jfl;kajsdfkljalk;sdfjal;skdjfl;kasjdf;l' +
+                'aklsdjf;lkajsdfkl;jaskldfjakl;sdjfkl;asjdflkjaskld;jfaskl;jdf;klasjdfl;kajsd' +
+                'klgajfdl;asfj;lkasdjfkla;sjdfkl;asdjfkl;ajsdl;kfjal;skdjfkl;asjdfkl;jasdfklj' +
+                'jalksdjflkjasdlk;fjaklsdjflk;jasdfl;kjasdkl;fjakls;djfakljfdkasjfdslj;',
+            dateDue: '1/1/23',
+            isTextAlert: false
+        },
+        {taskID: 2, className: 'nerfp', taskName: 'test2', desc: 'test2 desc', dateDue: '2/2/23', isTextAlert: true},
+        {taskID: 3, className: 'nessr', taskName: 'test3', desc: 'test3 desc', dateDue: '3/3/23', isTextAlert: false},
+        {taskID: 4, className: 'neeerp', taskName: 'test4', desc: 'test4 desc', dateDue: '3/3/23', isTextAlert: false},
+        {taskID: 45, className: 'need', taskName: 'test5', desc: 'test5 desc', dateDue: '3/3/23', isTextAlert: false},
     ];
-
-
-    // const groupedTask: GroupedTask = task.reduce((acc: GroupedTask, curr) => {
-    //     acc[curr.className] = acc[curr.className] || [];
-    //     acc[curr.className].push(curr);
-    //     return acc;
-    // }, {});
 
     const groupedTask: GroupedTask = task.reduce((acc: GroupedTask, curr) => {
         if (!acc[curr.className]) {
@@ -95,58 +101,40 @@ const TaskTracker: NextPage = () => {
     return (
         <>
             <FloatingNavbar/>
-            <Box mx="auto" pt={60} px={5} maxW={'1260px'}>
-                <SimpleGrid spacing={2} templateColumns={"repeat(auto-fill, minmax(250px, 1fr))"}>
-                    {Object.keys(groupedTask).map((classID) => {
-                        const tasks = groupedTask[classID];
-                        return (
-                            <Card key={classID} p={2} size={"lg"} bg={colorMode === "light" ? "gray.200" : "gray.700"}>
-                                <CardHeader>
-                                    <Heading>{classID}</Heading>
-                                </CardHeader>
-                                {tasks.map((task) => (
-                                    <Card my={.5} key={task.taskName} bg={colorMode === "light" ? "white" : "gray.600"}>
-                                        <Accordion allowMultiple>
-                                            <AccordionItem border={'0'}>
-                                                <AccordionButton>
-                                                    <Box as="span" flex='1' textAlign='left'>
-                                                        {task.taskName}
-                                                    </Box>
-                                                    <AccordionIcon/>
-                                                </AccordionButton>
-                                                <AccordionPanel>
-                                                    {task.desc}
-                                                </AccordionPanel>
-                                            </AccordionItem>
-                                        </Accordion>
-                                    </Card>
-                                ))}
-                            </Card>
-                        );
-                    })}
-                </SimpleGrid>
-                <SimpleGrid spacing={2} templateColumns={"repeat(auto-fill, minmax(250px, 1fr))"}>
-                    {/*for reference to get index info*/}
-                    {/*{data.map((item, index) => (*/}
-                    {task.map((item) => (
-                        <Card key={item.className} p={2} size={"lg"}
+            <Flex justifyContent="center" flexWrap="wrap" pt={55}>
+                {Object.keys(groupedTask).map((classID) => {
+                    const tasks = groupedTask[classID];
+                    return (
+                        <Card key={classID} width={'350px'} p={2} m={1} size={"lg"}
                               bg={colorMode === "light" ? "gray.200" : "gray.700"}>
                             <CardHeader>
-                                <Heading>{item.taskName}</Heading>
+                                <Heading>{classID}</Heading>
                             </CardHeader>
-                            <CardBody>{item.desc}</CardBody>
-                            <CardFooter justify={"center"}>
-                                <Button>View here</Button>
-                            </CardFooter>
+                            {tasks.map((task) => (
+                                <Card key={task.taskName} my={1} size={"lg"}
+                                      bg={colorMode === "light" ? "white" : "gray.600"}>
+                                    <Accordion allowMultiple>
+                                        <AccordionItem border={'0'}>
+                                            <AccordionButton>
+                                                <Box as="span" flex='1' textAlign='left' maxW={'65%'}>
+                                                    {task.taskName}
+                                                </Box>
+                                                <Box as="span" flex='1' textAlign='right'>
+                                                    Due:<br/>{task.dateDue}
+                                                </Box>
+                                                <AccordionIcon style={{position: 'relative', top: '-10px'}}/>
+                                            </AccordionButton>
+                                            <AccordionPanel>
+                                                {task.desc}
+                                            </AccordionPanel>
+                                        </AccordionItem>
+                                    </Accordion>
+                                </Card>
+                            ))}
                         </Card>
-                    ))}
-                </SimpleGrid>
-            </Box>
-            {/*    /!*<Button onClick={() => signOut({redirect: false})}>Sign out</Button>*!/*/}
-            {/*    <Button colorScheme={'blue'}>*/}
-            {/*        <Link href="/TwilioPoC">Twilio PoC</Link>*/}
-            {/*    </Button>*/}
-            {/*</VStack>*/}
+                    );
+                })}
+            </Flex>
         </>
     )
 }
