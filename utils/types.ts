@@ -6,12 +6,25 @@ export interface ResponseFuncs {
     DELETE?: Function
 }
 
+// Interface to define our Task model on the frontend
+export interface Task {
+    _id?: number
+    taskName: string
+    desc: string
+    dateDue: string
+    isTextAlert: boolean
+}
+// Interface to define our Class model on the frontend
+export interface Class {
+    _id?: number
+    className: string
+    tasks: Task[]
+}
+
 // Interface to define our User model on the frontend
 export interface User {
     _id?: number
-    email: string
-    pwd: string
     fName: string
     lName: string
-    phone: string
+    classes: Class[]
 }
