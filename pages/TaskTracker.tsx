@@ -17,7 +17,7 @@ import {User} from "../utils/types";
 import React, {useEffect} from "react";
 // import Image from "next/image";
 // import mockCal from '../public/calPoC.png'
-import {signOut, useSession, getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import {useRouter} from "next/router";
 
 const TaskTracker: NextPage = () => {
@@ -141,9 +141,8 @@ const TaskTracker: NextPage = () => {
 
     const { data: session, status } = useSession()
     const router = useRouter()
-    const test = getSession()
-    console.log(test)
-    console.log(session)
+    // gets user email from session cookie
+    console.log(session?.user?.email)
 
     useEffect(() => {
         if (status === "unauthenticated") router.replace("/");

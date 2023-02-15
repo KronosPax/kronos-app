@@ -1,11 +1,26 @@
 import {Flex, HStack, IconButton, Menu, MenuButton, MenuItem, MenuList, useColorMode} from "@chakra-ui/react";
 import Image from "next/image";
 import kpLogo from "../public/kpLogo.svg";
-import {AddIcon, EditIcon, ExternalLinkIcon, HamburgerIcon, MoonIcon, RepeatIcon, SunIcon} from "@chakra-ui/icons";
+import {
+    ArrowRightIcon,
+    EditIcon,
+    HamburgerIcon,
+    MoonIcon,
+    RepeatIcon,
+    SettingsIcon,
+    SunIcon
+} from "@chakra-ui/icons";
 import React from "react";
+import {useSession, signOut} from "next-auth/react";
+
 
 const FloatingNavbar: React.FC = () => {
-    const { colorMode, toggleColorMode } = useColorMode();
+    const {colorMode, toggleColorMode} = useColorMode();
+    const { status } = useSession()
+    const handleSignOut = async () => {
+        await signOut();
+    };
+
 
     return (
         <Flex as={'header'} position={"fixed"} w={'100%'} align={"center"} justify={"space-between"}
@@ -25,26 +40,32 @@ const FloatingNavbar: React.FC = () => {
                     <MenuButton
                         as={IconButton}
                         aria-label='Options'
-                        icon={<HamburgerIcon />}
+                        icon={<HamburgerIcon/>}
                         // variant='outline'
                     />
-                    <MenuList>
-                        <MenuItem icon={<AddIcon />}>
-                            New Tab
-                        </MenuItem>
-                        <MenuItem icon={<ExternalLinkIcon />}>
-                            New Window
-                        </MenuItem>
-                        <MenuItem icon={<RepeatIcon />}>
-                            Open Closed Tab
-                        </MenuItem>
-                        <MenuItem icon={<EditIcon />}>
-                            Open File...
-                        </MenuItem>
-                    </MenuList>
+                    {status === "authenticated" ? (
+                        <MenuList>
+                            <MenuItem icon={<SettingsIcon/>}>
+                                Settings
+                            </MenuItem>
+                            <MenuItem onClick={handleSignOut} icon={<ArrowRightIcon/>}>
+                                Sign Out
+                            </MenuItem>
+                        </MenuList>
+                    ) : (
+                        <MenuList>
+                            <MenuItem icon={<RepeatIcon/>}>
+                                Open Closed Tab
+                            </MenuItem>
+                            <MenuItem icon={<EditIcon/>}>
+                                Open File...
+                            </MenuItem>
+                        </MenuList>
+                    )}
                 </Menu>
             </HStack>
         </Flex>
-)};
+    )
+};
 
 export default FloatingNavbar;
