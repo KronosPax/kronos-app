@@ -10,6 +10,24 @@ export const connect = async () => {
         .catch(err => console.log(err))
     console.log("Mongoose Connection Established")
 
+    const TaskSchema = new mongoose.Schema({
+        task: [
+            {
+                taskName: {type: String, required: true},
+                dateDue: {type: Date, required: true},  // fix later when object type is known
+                _id: {type: Number, required: true},
+                isTextAlert: {type: Boolean, required: true}, // is true when user wants text notification
+                desc: String, // description of task
+            }
+        ]
+    });
+
+    const ClassSchema = new mongoose.Schema({
+        _id: {type: String, required: true},
+        className: {type:String, required: true},
+        tasks:{type:[TaskSchema]}
+    });
+
     // OUR USER SCHEMA
     const UserSchema = new mongoose.Schema({
         email: {type: String, required: true},
@@ -17,6 +35,7 @@ export const connect = async () => {
         fName: {type: String, required: true},
         lName: {type: String, required: true},
         phone: String,
+        class: {type:[ClassSchema]},
     });
 
     // OUR USER MODEL
