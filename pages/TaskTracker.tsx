@@ -10,13 +10,16 @@ import {
     AccordionButton,
     AccordionIcon,
     AccordionPanel,
-    Flex
+    Flex,
+    IconButton,
+    Tooltip
 } from "@chakra-ui/react";
 import FloatingNavbar from "../components/FloatingNavbar";
 import {User} from "../utils/types";
 import {useEffect} from "react";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
+import {AddIcon, DeleteIcon} from "@chakra-ui/icons";
 
 const TaskTracker: NextPage = () => {
 
@@ -76,8 +79,16 @@ const TaskTracker: NextPage = () => {
     console.log(session?.user?.email)
 
     useEffect(() => {
-        if (status === "unauthenticated") router.replace("/");
-    }, [status]);
+        if (status === "unauthenticated") router.replace("/")
+    }, [status])
+
+    function handleAddTask() {
+        //addTask endpoint
+    }
+
+    function handleDeleteTask() {
+        //deleteTask endpoint
+    }
 
     if (status === "authenticated") {
         return (
@@ -89,7 +100,12 @@ const TaskTracker: NextPage = () => {
                             <Card key={classObject._id} width={'350px'} p={2} m={1} size={"lg"}
                                   bg={colorMode === "light" ? "gray.200" : "gray.700"}>
                                 <CardHeader>
-                                    <Heading>{classObject.className}</Heading>
+                                    <Flex justifyContent="space-between" alignItems="center">
+                                        <Heading>{classObject.className}</Heading>
+                                        <Tooltip label="Add Task" aria-label="A tooltip">
+                                            <IconButton onClick={handleAddTask} bg="transparent" aria-label="Add Task" icon={<AddIcon />} />
+                                        </Tooltip>
+                                    </Flex>
                                 </CardHeader>
                                 {classObject.tasks.map((task) => (
                                     <Card key={task._id} my={1} size={"lg"}
@@ -106,7 +122,14 @@ const TaskTracker: NextPage = () => {
                                                     <AccordionIcon style={{position: 'relative', top: '-10px'}}/>
                                                 </AccordionButton>
                                                 <AccordionPanel>
-                                                    {task.desc}
+                                                    <Flex justifyContent="space-between" alignItems="center">
+                                                        <Box as="span" flex='1' textAlign='left' maxW={'85%'}>
+                                                        {task.desc}
+                                                        </Box>
+                                                        <Tooltip label="Delete Task" aria-label="A tooltip">
+                                                            <IconButton  onClick={handleDeleteTask} bg="transparent" aria-label="Add Task" icon={<DeleteIcon />} />
+                                                        </Tooltip>
+                                                    </Flex>
                                                 </AccordionPanel>
                                             </AccordionItem>
                                         </Accordion>
