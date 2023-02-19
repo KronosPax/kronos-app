@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { connect } from "../../utils/connection"
 import { ResponseFuncs } from "../../utils/types"
-import {compare, hash} from "bcrypt"
 
 // Called by nextauth signIn() compared recieved data against DB entries looks for match
 // Using mongoose to interface with MongoDB instance, schema and model are defined in connections.ts
@@ -17,8 +16,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // RESPONSE FOR GET REQUESTS
         POST: async (req: NextApiRequest, res: NextApiResponse) => {
             const { User } = await connect() // connect to database
-            if (await User.findOneAndUpdate({ //searches for email, if found fill User model with info
-
+            //searches for email, if found fill User model with info
+            if (await User.findOneAndUpdate({
                 email: req.body.email}) !== null){ // kicks out if email doesn't exist
                 console.log("user exist")
 

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { connect } from "../utils/connection"
-import { ResponseFuncs } from "../../../utils/types"
-import { compare } from "bcrypt"
+import { connect } from "../../utils/connection"
+import { ResponseFuncs } from "../../utils/types"
+
 
 // Called by nextauth signIn() compared recieved data against DB entries looks for match
 // Using mongoose to interface with MongoDB instance, schema and model are defined in connections.ts
@@ -19,12 +19,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             const { User } = await connect() // connect to database
 
             const user = await User.findOne({
-                email: req.body.email})
+                email: req.body.email}) // find user by unique email
 
-            console.log(task)
+            console.log("creating new task")
 
-            if (user !== null && class !== null) { // triggers when db gives something back (null back means nothing exists)
+            if (await User.findOneAndUpdate({
+                className: req.body.className}) !== null){
 
+                taskName: req.body.taskName
+                await User.update(req.body).catch(catcher)
+                console.log("creating new task")
+                res.status(200).json({ message: "Task Created" })};
                 // task name
                 // due date
                 // isTextAlert // is true when user wants text notification
