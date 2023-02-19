@@ -15,32 +15,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const handleCase: ResponseFuncs = {
         // RESPONSE FOR GET REQUESTS
         POST: async (req: NextApiRequest, res: NextApiResponse) => {
-            const {User} = await connect() // connect to database
-
+            const { User } = await connect() // connect to database
+            //searches for email, if found fill User model with info
             const user = await User.findOne({
                 email: req.body.email
             }) // find user by unique email
-
-            console.log("creating new task")
-
-            if (await User.findOneAndUpdate({className: req.body.className}) !== null) {
-                // isTextAlert // is true when user wants text notification
-                taskName: req.body.taskName // task name
-                desc: req.body.desc // description
-                dateDue: req.body.dateDue // due date
-                await User.update(req.body).catch(catcher)
-                console.log("creating new task")
-                res.status(200).json({message: "Task Created"})
-                // edit task
-                // delete task
-
-                // if class doesn't exist throw 200 error
-            }
-            else
-            {
-                res.status(200).json(null) // if no user exists error 200 is given back
-            }
+            console.log("deleting class")
+            if (await User.findOne({className: req.body.className}) !== null) {
+                await User.deleteOne(req.body).catch(catcher)
+                console.log("deleting class")
+                res.status(200).json({ message: "Class Deleted" })};
         }
+
     }
 
     // Check if there is a response for the particular method, if so invoke it, if not response with an error
