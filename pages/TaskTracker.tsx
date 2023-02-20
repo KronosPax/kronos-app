@@ -10,7 +10,8 @@ import {
     AccordionButton,
     AccordionIcon,
     AccordionPanel,
-    Flex
+    Flex,
+    Button
 } from "@chakra-ui/react";
 import FloatingNavbar from "../components/FloatingNavbar";
 import {User} from "../utils/types";
@@ -79,11 +80,31 @@ const TaskTracker: NextPage = () => {
         if (status === "unauthenticated") router.replace("/");
     }, [status]);
 
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        const registerInfo = {
+            email: 'test',
+            className: 'math'
+        };
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(registerInfo)
+        };
+
+        const res: Response = await fetch('/api/createClass', requestOptions)
+        console.log(res)
+        console.log(res)}
+
+
+
+
     if (status === "authenticated") {
         return (
             <>
                 <FloatingNavbar/>
                 <Flex justifyContent="center" flexWrap="wrap" pt={55}>
+                    <Button onClick={handleSubmit}>Test Route</Button>
                     {testUser.classes.map((classObject) => {
                         return (
                             <Card key={classObject._id} width={'350px'} p={2} m={1} size={"lg"}

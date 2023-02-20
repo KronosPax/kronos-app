@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { connect } from "../../utils/connection"
 import { ResponseFuncs } from "../../utils/types"
+import {v4 as uuidv4} from "uuid"
 
 // Called by nextauth signIn() compared recieved data against DB entries looks for match
 // Using mongoose to interface with MongoDB instance, schema and model are defined in connections.ts
@@ -16,15 +17,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // RESPONSE FOR GET REQUESTS
         POST: async (req: NextApiRequest, res: NextApiResponse) => {
             const { User } = await connect() // connect to database
-            //searches for email, if found fill User model with info
-            if (await User.findOne({email: req.body.email}) !== null){ // kicks out if email doesn't exist
-                console.log("user exist")
-                console.log(User)
+            const test = await User.findOne({ email: req.body.email })
 
-                className: req.body.className
-                await User.update(req.body).catch(catcher)
+            if (test != null) {
+                console.log("user exists")
+                console.log(test)
+
                 console.log("creating class")
-                res.status(200).json({ message: "Class Created" })};
+                const newClass = {
+                    _id: uuidv4(),
+                    className: "New Class",
+                    tasks: []
+                }
+                test.classes.push(newClass)
+
+                await test.save()
+                console.log(test)
+
+                res.status(200).json({ message: "Class Created" })
+            } else {
+                res.status(404).json({ message: "User not found" })
+            }
         }
 
     }
