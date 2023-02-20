@@ -17,22 +17,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // RESPONSE FOR GET REQUESTS
         POST: async (req: NextApiRequest, res: NextApiResponse) => {
             const { User } = await connect() // connect to database
-            const test = await User.findOne({ email: req.body.email })
+            const userT = await User.findOne({ email: req.body.email })
 
-            if (test != null) {
+            if (userT != null) {
                 console.log("user exists")
-                console.log(test)
+                console.log(userT)
 
                 console.log("creating class")
                 const newClass = {
-                    _id: uuidv4(),
-                    className: "New Class",
+                    _id: uuidv4(),  // unique ID generation
+                    className: req.body.className,
                     tasks: []
                 }
-                test.classes.push(newClass)
+                userT.classes.push(newClass)
 
-                await test.save()
-                console.log(test)
+                await userT.save()
+                console.log(userT)
 
                 res.status(200).json({ message: "Class Created" })
             } else {

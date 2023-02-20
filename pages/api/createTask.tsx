@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { connect } from "../../utils/connection"
 import { ResponseFuncs } from "../../utils/types"
+import {v4 as uuidv4} from "uuid"
 
 // Called by nextauth signIn() compared recieved data against DB entries looks for match
 // Using mongoose to interface with MongoDB instance, schema and model are defined in connections.ts
@@ -16,30 +17,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // RESPONSE FOR GET REQUESTS
         POST: async (req: NextApiRequest, res: NextApiResponse) => {
             const {User} = await connect() // connect to database
+            const userT = await User.findOne({email: req.body.email}) // find user by unique email
 
-            const user = await User.findOne({
-                email: req.body.email
-            }) // find user by unique email
+            if (userT != null){
+                console.log("user exists")
+                console.log(userT)
 
-            console.log("creating new task")
-
-            if (await User.findOneAndUpdate({className: req.body.className}) !== null) {
-                // isTextAlert // is true when user wants text notification
-                taskName: req.body.taskName // task name
-                desc: req.body.desc // description
-                dateDue: req.body.dateDue // due date
-                await User.updateOne(req.body).catch(catcher)
                 console.log("creating new task")
-                res.status(200).json({message: "Task Created"})
-                // edit task
-                // delete task
+                const newTask = {
+                    _id: uuidv4(), // unique ID generation
+                    taskName: req.body.taskName, // task name
+                    desc: req.body.desc, // description
+                    dateDue: req.body.dateDue,
+                    isTextAlert: req.body.isTextAlert  // is true if customer wants alerts for their task
+                }
+                userT.task.push(newTask)
 
-                // if class doesn't exist throw 200 error
+                await userT.save()
+                console.log(userT)
+
+                res.status(200).json({ message: "Task Created"})
+            } else {
+                res.status(404).json({ message: "User not found" })
             }
-            else
-            {
-                res.status(200).json(null) // if no user exists error 200 is given back
-            }
+
         }
     }
 
