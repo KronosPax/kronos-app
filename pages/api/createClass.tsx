@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 console.log("user exist")
 
                 className: req.body.className
-                await User.update(req.body).catch(catcher)
+                await User.updateOne(req.body).catch(catcher)
                 console.log("creating class")
                 res.status(200).json({ message: "Class Created" })};
         }

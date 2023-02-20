@@ -28,7 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 taskName: req.body.taskName // task name
                 desc: req.body.desc // description
                 dateDue: req.body.dateDue // due date
-                await User.update(req.body).catch(catcher)
+                await User.updateOne(req.body).catch(catcher)
                 console.log("creating new task")
                 res.status(200).json({message: "Task Created"})
                 // edit task
