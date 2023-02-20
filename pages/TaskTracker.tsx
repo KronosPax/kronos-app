@@ -38,40 +38,40 @@ const TaskTracker: NextPage = () => {
         classes: [
             {
                 _id: 1,
-                className: 'Class 1',
+                className: 'Business Managment',
                 tasks: [
                     {
                         _id: 1,
-                        taskName: 'Task 1',
-                        desc: 'Description of Task 1',
-                        dateDue: '2022-12-31',
+                        taskName: 'Read chapter six',
+                        desc: 'annotate in notebook',
+                        dateDue: '03-23',
                         isTextAlert: true
                     },
                     {
                         _id: 2,
-                        taskName: 'Task 2',
-                        desc: 'Description of Task 2',
-                        dateDue: '2023-01-01',
+                        taskName: 'start paper',
+                        desc: 'get outline started',
+                        dateDue: '04-15',
                         isTextAlert: false
                     }
                 ]
             },
             {
                 _id: 2,
-                className: 'Class 2',
+                className: 'Architecture',
                 tasks: [
                     {
                         _id: 3,
-                        taskName: 'Task 3',
-                        desc: 'Description of Task 3',
-                        dateDue: '2023-01-02',
+                        taskName: 'hw1',
+                        desc: 'registers what are they?!?!',
+                        dateDue: '03-11',
                         isTextAlert: true
                     },
                     {
                         _id: 4,
-                        taskName: 'Task 4',
-                        desc: 'Description of Task 4',
-                        dateDue: '2023-01-03',
+                        taskName: 'choose final presentation topic',
+                        desc: 'Aliens?',
+                        dateDue: '03-27',
                         isTextAlert: false
                     }
                 ]
@@ -105,6 +105,7 @@ const TaskTracker: NextPage = () => {
     if (status === "authenticated") {
         return (
             <>
+
                 {/* Add the confirmation dialog */}
                 <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                     <AlertDialogOverlay/>
@@ -113,7 +114,7 @@ const TaskTracker: NextPage = () => {
                             Delete Task
                         </AlertDialogHeader>
                         <AlertDialogBody>
-                            Are you sure you want to delete this task? You can't undo this action afterwards.
+                            Are you sure you want to delete this task? You can&apos;t undo this action afterwards.
                         </AlertDialogBody>
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={onClose}>
