@@ -35,7 +35,7 @@ export const connect = async () => {
         fName: {type: String, required: true},
         lName: {type: String, required: true},
         phone: String,
-        class: {type:[ClassSchema]},
+        classes: {type:[ClassSchema]},
     });
 
     // OUR USER MODEL

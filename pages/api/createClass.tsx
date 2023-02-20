@@ -17,12 +17,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         POST: async (req: NextApiRequest, res: NextApiResponse) => {
             const { User } = await connect() // connect to database
             //searches for email, if found fill User model with info
-            if (await User.findOneAndUpdate({
-                email: req.body.email}) !== null){ // kicks out if email doesn't exist
+            if (await User.findOne({email: req.body.email}) !== null){ // kicks out if email doesn't exist
                 console.log("user exist")
+                console.log(User)
 
                 className: req.body.className
-                await User.updateOne(req.body).catch(catcher)
+                await User.update(req.body).catch(catcher)
                 console.log("creating class")
                 res.status(200).json({ message: "Class Created" })};
         }
