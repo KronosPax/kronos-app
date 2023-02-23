@@ -19,14 +19,27 @@ import {
     AlertDialogOverlay,
     AlertDialogFooter,
     AlertDialogContent,
-    AlertDialogHeader
+    AlertDialogHeader,
+    useDisclosure,
+    Input,
+    FormControl,
+    FormLabel,
+    ModalOverlay,
+    ModalBody,
+    ModalHeader,
+    Textarea,
+    ModalContent,
+    Modal,
+    ModalCloseButton,
+    ModalFooter
 } from "@chakra-ui/react";
 import FloatingNavbar from "../components/FloatingNavbar";
 import {User} from "../utils/types";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef} from "react";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import {AddIcon, DeleteIcon} from "@chakra-ui/icons";
+
 
 const TaskTracker: NextPage = () => {
 
@@ -80,9 +93,9 @@ const TaskTracker: NextPage = () => {
     };
 
     // Set up state for the confirmation dialog
-    const [isOpen, setIsOpen] = useState(false);
-    const onClose = () => setIsOpen(false);
-    const cancelRef = useRef(null);
+    const {isOpen: isOpenDel, onOpen: onOpenDel, onClose: onCloseDel} = useDisclosure()
+    const {isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd} = useDisclosure()
+    const cancelRef = useRef(null)
     const {colorMode} = useColorMode()
     const {data: session, status} = useSession()
     const router = useRouter()
@@ -93,21 +106,51 @@ const TaskTracker: NextPage = () => {
         if (status === "unauthenticated") router.replace("/")
     }, [status])
 
-    function handleAddTask() {
-        //addTask endpoint
-    }
 
     function handleDeleteTask() {
         console.log('delete task')
-        onClose()
+        onCloseDel()
     }
+
+    function handleSubmit(event: any) {
+        event.preventDefault();
+
+        console.log('submitted form')
+        console.log(event)
+        // code to handle form submission
+        onCloseAdd();
+    }
+
 
     if (status === "authenticated") {
         return (
             <>
+                {/* Add task dialog */}
+                <Modal isOpen={isOpenAdd} onClose={onCloseAdd}>
+                    <ModalOverlay/>
+                    <ModalContent as={"form"} onSubmit={handleSubmit}>
+                        <ModalHeader>Add Task</ModalHeader>
+                        <ModalCloseButton/>
+                        <ModalBody>
+                                <FormControl id="task">
+                                    <FormLabel>Task</FormLabel>
+                                    <Input type={"text"} placeholder="Task"/>
+                                </FormControl>
+                                <FormControl id="description">
+                                    <FormLabel>Description</FormLabel>
+                                    <Textarea placeholder="Description"/>
+                                </FormControl>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button type="submit" mt={4} colorScheme="teal">
+                                Add Task
+                            </Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
 
-                {/* Add the confirmation dialog */}
-                <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+                {/* Delete task confirmation dialog */}
+                <AlertDialog isOpen={isOpenDel} leastDestructiveRef={cancelRef} onClose={onCloseDel}>
                     <AlertDialogOverlay/>
                     <AlertDialogContent>
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -117,7 +160,7 @@ const TaskTracker: NextPage = () => {
                             Are you sure you want to delete this task? You can&apos;t undo this action afterwards.
                         </AlertDialogBody>
                         <AlertDialogFooter>
-                            <Button ref={cancelRef} onClick={onClose}>
+                            <Button ref={cancelRef} onClick={onCloseDel}>
                                 Cancel
                             </Button>
                             <Button colorScheme="red" onClick={handleDeleteTask} ml={3}>
@@ -139,7 +182,7 @@ const TaskTracker: NextPage = () => {
                                     <Flex justifyContent="space-between" alignItems="center">
                                         <Heading>{classObject.className}</Heading>
                                         <Tooltip label="Add Task" aria-label="A tooltip">
-                                            <IconButton onClick={handleAddTask} bg="transparent" aria-label="Add Task"
+                                            <IconButton onClick={onOpenAdd} bg="transparent" aria-label="Add Task"
                                                         icon={<AddIcon/>}/>
                                         </Tooltip>
                                     </Flex>
@@ -165,8 +208,8 @@ const TaskTracker: NextPage = () => {
                                                             {task.desc}
                                                         </Box>
                                                         <Tooltip label="Delete Task" aria-label="A tooltip">
-                                                            <IconButton onClick={() => setIsOpen(true)} bg="transparent"
-                                                                        aria-label="Add Task" icon={<DeleteIcon/>}/>
+                                                            <IconButton onClick={onOpenDel} bg="transparent"
+                                                                        aria-label="Delete Task" icon={<DeleteIcon/>}/>
                                                         </Tooltip>
                                                     </Flex>
                                                 </AccordionPanel>

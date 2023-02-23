@@ -16,7 +16,7 @@ export const Login: NextPage = () => {
     const {status} = useSession()
 
     const handleSubmit = async (e: any) => {
-        e.preventDefault();
+        e.preventDefault()
 
         const res = await signIn('credentials', {
             email: email,
@@ -71,7 +71,6 @@ export const Login: NextPage = () => {
                     <Heading>Login to KronosPax</Heading>
                     <Text>Enter your email and password</Text>
                 </VStack>
-
                 <FormControl>
                     <FormLabel>Email Address</FormLabel>
                     <Input value={email} onChange={(e) => setEmail(e.target.value)} rounded='none' variant={'filled'} type={'email'} id={'email'} />
@@ -80,12 +79,6 @@ export const Login: NextPage = () => {
                     <FormLabel>Password</FormLabel>
                     <Input value={pwd} onChange={(e) => setPwd(e.target.value)} rounded='none' variant={'filled'} type={'password'} id={'password'} />
                 </FormControl>
-                {/*<HStack w={'full'} justify={'space-between'}>*/}
-                {/*    <Checkbox>Remember me</Checkbox>*/}
-                {/*    <Button variant={'link'} colorScheme={'blue'}>*/}
-                {/*        Forgot Password*/}
-                {/*    </Button>*/}
-                {/*</HStack>*/}
                 <HStack w={'full'} justify={'space-between'}>
                     <Button onClick={handleSubmit} rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
                         Login
