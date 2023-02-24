@@ -13,9 +13,9 @@ export const connect = async () => {
     const TaskSchema = new mongoose.Schema({
         task: [
             {
+                _id: {type: String, required: true},
                 taskName: {type: String, required: true},
                 dateDue: {type: Date, required: true},  // fix later when object type is known
-                _id: {type: Number, required: true},
                 isTextAlert: {type: Boolean, required: true}, // is true when user wants text notification
                 desc: String, // description of task
             }
