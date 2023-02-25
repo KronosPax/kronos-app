@@ -31,11 +31,12 @@ import {
     ModalContent,
     Modal,
     ModalCloseButton,
-    ModalFooter
+    ModalFooter,
+    Switch
 } from "@chakra-ui/react";
 import FloatingNavbar from "../components/FloatingNavbar";
 import {User} from "../utils/types";
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import {AddIcon, DeleteIcon} from "@chakra-ui/icons";
@@ -51,20 +52,20 @@ const TaskTracker: NextPage = () => {
         classes: [
             {
                 _id: 1,
-                className: 'Business Managment',
+                className: 'Business Management',
                 tasks: [
                     {
                         _id: 1,
                         taskName: 'Read chapter six',
                         desc: 'annotate in notebook',
-                        dateDue: '03-23',
+                        dateDue: new Date("2023-03-15T18:24:00"),
                         isTextAlert: true
                     },
                     {
                         _id: 2,
                         taskName: 'start paper',
                         desc: 'get outline started',
-                        dateDue: '04-15',
+                        dateDue: new Date("2023-02-28T12:24:00"),
                         isTextAlert: false
                     }
                 ]
@@ -77,14 +78,14 @@ const TaskTracker: NextPage = () => {
                         _id: 3,
                         taskName: 'hw1',
                         desc: 'registers what are they?!?!',
-                        dateDue: '03-11',
+                        dateDue: new Date("2023-03-19T13:24:00"),
                         isTextAlert: true
                     },
                     {
                         _id: 4,
                         taskName: 'choose final presentation topic',
                         desc: 'Aliens?',
-                        dateDue: '03-27',
+                        dateDue: new Date("2023-03-01T17:24:00"),
                         isTextAlert: false
                     }
                 ]
@@ -92,13 +93,19 @@ const TaskTracker: NextPage = () => {
         ]
     };
 
-    // Set up state for the confirmation dialog
+    // Set up state
     const {isOpen: isOpenDel, onOpen: onOpenDel, onClose: onCloseDel} = useDisclosure()
     const {isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd} = useDisclosure()
     const cancelRef = useRef(null)
     const {colorMode} = useColorMode()
     const {data: session, status} = useSession()
     const router = useRouter()
+    const [taskName, setTaskName] = useState("")
+    const [desc, setDesc] = useState("")
+    const [dateDue, setDateDue] = useState(Date())
+    const [isTextAlert, setIsTextAlert] = useState(false)
+
+
     // gets user email from session cookie
     console.log(session?.user?.email)
 
@@ -112,12 +119,32 @@ const TaskTracker: NextPage = () => {
         onCloseDel()
     }
 
-    function handleSubmit(event: any) {
+    async function handleSubmit(event: any) {
         event.preventDefault();
 
         console.log('submitted form')
-        console.log(event)
+
+        const taskForm = {
+            taskName: taskName,
+            desc: desc,
+            dateDue: dateDue,
+            isTextAlert: isTextAlert
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(taskForm)
+        }
+        console.log(taskForm)
+
+        const res: Response = await fetch('/api/addTask', requestOptions)
         // code to handle form submission
+
+        setTaskName('')
+        setDesc('')
+        setDateDue(Date())
+        setIsTextAlert(false)
+
         onCloseAdd();
     }
 
@@ -132,14 +159,38 @@ const TaskTracker: NextPage = () => {
                         <ModalHeader>Add Task</ModalHeader>
                         <ModalCloseButton/>
                         <ModalBody>
-                                <FormControl id="task">
-                                    <FormLabel>Task</FormLabel>
-                                    <Input type={"text"} placeholder="Task"/>
-                                </FormControl>
-                                <FormControl id="description">
-                                    <FormLabel>Description</FormLabel>
-                                    <Textarea placeholder="Description"/>
-                                </FormControl>
+                            <FormControl>
+                                <FormLabel>
+                                    Task
+                                </FormLabel>
+                                <Input type={"text"} placeholder="New Task" onChange={(e) => setTaskName(e.target.value)}/>
+                            </FormControl>
+                            <br/>
+                            <FormControl>
+                                <FormLabel>
+                                    Description
+                                </FormLabel>
+                                <Textarea placeholder="New Description" onChange={(e) => setDesc(e.target.value)}/>
+                            </FormControl>
+                            <FormControl>
+                                <br/>
+                                <FormLabel>
+                                    Due Date
+                                </FormLabel>
+                                <Input
+                                    placeholder="Select Date and Time"
+                                    size="md"
+                                    type="datetime-local"
+                                    onChange={(e) => setDateDue(e.target.value)}
+                                />
+                            </FormControl>
+                            <br/>
+                            <FormControl display='flex' alignItems='center'>
+                                <FormLabel htmlFor='text-alerts' mb='0'>
+                                    Enable email alerts?
+                                </FormLabel>
+                                <Switch id='text-alerts' isChecked={isTextAlert} onChange={()=>{setIsTextAlert(!isTextAlert)}}/>
+                            </FormControl>
                         </ModalBody>
                         <ModalFooter>
                             <Button type="submit" mt={4} colorScheme="teal">
@@ -197,10 +248,19 @@ const TaskTracker: NextPage = () => {
                                                     <Box as="span" flex='1' textAlign='left' maxW={'65%'}>
                                                         {task.taskName}
                                                     </Box>
-                                                    <Box as="span" flex='1' textAlign='right'>
-                                                        Due:<br/>{task.dateDue}
+                                                    <Box as="span" flex='1' textAlign='right' maxW={'35%'}>
+                                                        Due:<br/>{task.dateDue.toLocaleString('en-US', {
+                                                        hour: 'numeric',
+                                                        minute: 'numeric',
+                                                    })}
+                                                        <br/>
+                                                        {task.dateDue.toLocaleString('en-US', {
+                                                            month: 'numeric',
+                                                            day: 'numeric',
+                                                            year: 'numeric',
+                                                        })}
                                                     </Box>
-                                                    <AccordionIcon style={{position: 'relative', top: '-10px'}}/>
+                                                    <AccordionIcon style={{position: 'relative', top: '-25px'}}/>
                                                 </AccordionButton>
                                                 <AccordionPanel>
                                                     <Flex justifyContent="space-between" alignItems="center">

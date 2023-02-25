@@ -11,7 +11,7 @@ export interface Task {
     _id?: number
     taskName: string
     desc: string
-    dateDue: string
+    dateDue: Date
     isTextAlert: boolean
 }
 // Interface to define our Class model on the frontend
