@@ -84,7 +84,11 @@ const TaskTracker: NextPage = () => {
         e.preventDefault();
         const registerInfo = {
             email: 'test',
-            className: 'math'
+            className: 'math',
+            taskName: 'hw1',
+            desc: 'scary math',
+            dateDue: Date(),
+            isTextAlert: true
         };
         const requestOptions = {
             method: 'POST',
@@ -92,7 +96,7 @@ const TaskTracker: NextPage = () => {
             body: JSON.stringify(registerInfo)
         };
 
-        const res: Response = await fetch('/api/createClass', requestOptions)
+        const res: Response = await fetch('/api/createTask', requestOptions)
         console.log(res)
         console.log(res)}
 
