@@ -106,9 +106,6 @@ const TaskTracker: NextPage = () => {
     const [isTextAlert, setIsTextAlert] = useState(false)
     const [classID, setClassID] = useState("")
 
-    // gets user email from session cookie
-    console.log(session?.user?.email)
-
     useEffect(() => {
         if (status === "unauthenticated") router.replace("/")
     }, [status])
@@ -118,12 +115,13 @@ const TaskTracker: NextPage = () => {
         onCloseDel()
     }
 
-    async function handleSubmit(event: any) {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
 
         console.log('submitted form')
 
         const taskForm = {
+            email: session?.user?.email,
             taskName: taskName,
             desc: desc,
             dateDue: dateDue,
@@ -135,9 +133,9 @@ const TaskTracker: NextPage = () => {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(taskForm)
         }
-        console.log(taskForm)
+        console.log(requestOptions)
 
-        const res: Response = await fetch('/api/addTask', requestOptions)
+        // const res: Response = await fetch('/api/addTask', requestOptions)
         // code to handle form submission
 
         setTaskName('')
@@ -155,35 +153,37 @@ const TaskTracker: NextPage = () => {
                 {/* Add task modal */}
                 <Modal isOpen={isOpenAdd} onClose={onCloseAdd}>
                     <ModalOverlay/>
-                    <ModalContent as={"form"} onSubmit={handleSubmit}>
+                    <ModalContent as={"form"} onSubmit={handleSubmit}
+                                  bg={colorMode === "light" ? "gray.300" : "gray.700"}>
                         <ModalHeader>Add Task</ModalHeader>
                         <ModalCloseButton/>
                         <ModalBody>
                             {/* Form for add task */}
-                            <FormControl>
+                            <FormControl isRequired>
                                 <FormLabel>
                                     Task
                                 </FormLabel>
                                 <Input type={"text"} placeholder="New Task"
-                                       onChange={(e) => setTaskName(e.target.value)}/>
+                                       onChange={(e) => setTaskName(e.target.value)} variant={'filled'}/>
                             </FormControl>
                             <br/>
                             <FormControl>
                                 <FormLabel>
                                     Description
                                 </FormLabel>
-                                <Textarea placeholder="New Description" onChange={(e) => setDesc(e.target.value)}/>
+                                <Textarea placeholder="New Description" onChange={(e) => setDesc(e.target.value)}
+                                          variant={'filled'}/>
                             </FormControl>
-                            <FormControl>
+                            <FormControl isRequired>
                                 <br/>
                                 <FormLabel>
                                     Due Date
                                 </FormLabel>
                                 <Input
                                     placeholder="Select Date and Time"
-                                    size="md"
                                     type="datetime-local"
                                     onChange={(e) => setDateDue(e.target.value)}
+                                    variant={'filled'}
                                 />
                             </FormControl>
                             <br/>
@@ -232,14 +232,16 @@ const TaskTracker: NextPage = () => {
                     {testUser.classes.map((classObject) => {
                         return (
                             <Card key={classObject._id} width={'350px'} p={2} m={1} size={"lg"}
-                                  bg={colorMode === "light" ? "gray.200" : "gray.700"}
-                                  onClick={() => setClassID(classObject?._id || "")}>
+                                  bg={colorMode === "light" ? "gray.300" : "gray.700"}>
                                 <CardHeader>
                                     <Flex justifyContent="space-between" alignItems="center">
                                         <Heading>{classObject.className}</Heading>
                                         <Tooltip label="Add Task" aria-label="A tooltip">
-                                            <IconButton onClick={onOpenAdd} bg="transparent" aria-label="Add Task"
-                                                        icon={<AddIcon/>}/>
+                                            <IconButton bg="transparent" aria-label="Add Task" icon={<AddIcon/>}
+                                                        onClick={() => {
+                                                            setClassID(classObject?._id || "")
+                                                            onOpenAdd()
+                                                        }}/>
                                         </Tooltip>
                                     </Flex>
                                 </CardHeader>

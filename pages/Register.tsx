@@ -17,6 +17,7 @@ import {
     ModalContent,
     ModalOverlay,
     Text,
+    useColorMode,
     useDisclosure,
     VStack
 } from "@chakra-ui/react";
@@ -30,8 +31,9 @@ export const Register: NextPage = () => {
     const [fName, setFName] = useState("");
     const [lName, setLName] = useState("");
     const [phone, setPhone] = useState("");
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const {isOpen, onOpen, onClose} = useDisclosure();
     const [regError, setRegError] = useState("")
+    const {colorMode} = useColorMode()
     const router = useRouter()
 
 
@@ -56,7 +58,7 @@ export const Register: NextPage = () => {
             const badRes = await res.json()
             setRegError(badRes.error)
             onOpen();
-        }else{
+        } else {
             const user = await res.json()
             console.log(user)
             await router.push("/")
@@ -66,12 +68,13 @@ export const Register: NextPage = () => {
     return (
         <Box
             w={['full', 'md']}
-            p={[8,10]}
+            p={[8, 10]}
             mt={[20, '10vh']}
-            mx='auto'
-            border={['none', '1px']}
-            borderColor={['', 'gray.300']}
+            mx={'auto'}
+            border={'1px'}
+            borderColor={'gray.500'}
             borderRadius={10}
+            bg={colorMode === "light" ? "gray.300" : "gray.700"}
         >
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay/>
@@ -85,44 +88,34 @@ export const Register: NextPage = () => {
                     <ModalCloseButton/>
                 </ModalContent>
             </Modal>
-
-            <VStack spacing={4} align={'flex-start'} w={'full'}>
-                <VStack spacing={1} w={'full'}>
-                    <Heading>Register for KronosPax</Heading>
-                    <Text>Enter your account information</Text>
-                </VStack>
-
-                <FormControl>
+            <VStack as={'form'} onSubmit={handleSubmit}>
+                <Heading>Register</Heading>
+                <Text>Enter your account information</Text>
+                <FormControl isRequired>
                     <FormLabel>First Name</FormLabel>
-                    <Input value={fName} onChange={(e) => setFName(e.target.value)} rounded='none' variant={'filled'} type={'text'} id={'fName'} />
+                    <Input onChange={(e) => setFName(e.target.value)} variant={'filled'}/>
                 </FormControl>
-                <FormControl>
+                <FormControl isRequired>
                     <FormLabel>Last Name</FormLabel>
-                    <Input value={lName} onChange={(e) => setLName(e.target.value)} rounded='none' variant={'filled'} type={'text'} id={'lName'} />
+                    <Input onChange={(e) => setLName(e.target.value)} variant={'filled'} type={'text'}/>
                 </FormControl>
-                <FormControl>
+                <FormControl isRequired>
                     <FormLabel>Email Address</FormLabel>
-                    <Input value={email} onChange={(e) => setEmail(e.target.value)} rounded='none' variant={'filled'} type={'email'} id={'email'} />
+                    <Input onChange={(e) => setEmail(e.target.value)} variant={'filled'} type={'email'}/>
                 </FormControl>
-                <FormControl>
+                <FormControl isRequired>
                     <FormLabel>Password</FormLabel>
-                    <Input value={pwd} onChange={(e) => setPwd(e.target.value)} rounded='none' variant={'filled'} type={'password'} id={'password'} />
+                    <Input onChange={(e) => setPwd(e.target.value)} variant={'filled'} type={'password'}/>
                 </FormControl>
                 <FormControl>
                     <FormLabel>Phone Number</FormLabel>
-                    <Input value={phone} onChange={(e) => setPhone(e.target.value)} rounded='none' variant={'filled'} type={'tel'} id={'phone'} />
+                    <Input onChange={(e) => setPhone(e.target.value)} variant={'filled'} type={'tel'}/>
                 </FormControl>
-                {/*<HStack w={'full'} justify={'space-between'}>*/}
-                {/*    <Checkbox>Remember me</Checkbox>*/}
-                {/*    <Button variant={'link'} colorScheme={'blue'}>*/}
-                {/*        Forgot Password*/}
-                {/*    </Button>*/}
-                {/*</HStack>*/}
                 <HStack w={'full'} justify={'space-between'}>
-                    <Button onClick={handleSubmit} rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
+                    <Button type='submit' colorScheme={'teal'}>
                         Create Account
                     </Button>
-                    <Button rounded={'none'} colorScheme={'blue'} w={['full', 'auto']}>
+                    <Button colorScheme={'teal'}>
                         <Link href="/Login">Login Here</Link>
                     </Button>
                 </HStack>
