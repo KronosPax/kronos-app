@@ -46,23 +46,23 @@ const TaskTracker: NextPage = () => {
 
     // for testing frontend
     const testUser: User = {
-        _id: 1,
+        _id: '1',
         fName: 'Test',
         lName: 'User',
         classes: [
             {
-                _id: 1,
+                _id: '1',
                 className: 'Business Management',
                 tasks: [
                     {
-                        _id: 1,
+                        _id: '1',
                         taskName: 'Read chapter six',
                         desc: 'annotate in notebook',
                         dateDue: new Date("2023-03-15T18:24:00"),
                         isTextAlert: true
                     },
                     {
-                        _id: 2,
+                        _id: '2',
                         taskName: 'start paper',
                         desc: 'get outline started',
                         dateDue: new Date("2023-02-28T12:24:00"),
@@ -71,18 +71,18 @@ const TaskTracker: NextPage = () => {
                 ]
             },
             {
-                _id: 2,
+                _id: '2',
                 className: 'Architecture',
                 tasks: [
                     {
-                        _id: 3,
+                        _id: '1',
                         taskName: 'hw1',
                         desc: 'registers what are they?!?!',
                         dateDue: new Date("2023-03-19T13:24:00"),
                         isTextAlert: true
                     },
                     {
-                        _id: 4,
+                        _id: '2',
                         taskName: 'choose final presentation topic',
                         desc: 'Aliens?',
                         dateDue: new Date("2023-03-01T17:24:00"),
@@ -104,7 +104,7 @@ const TaskTracker: NextPage = () => {
     const [desc, setDesc] = useState("")
     const [dateDue, setDateDue] = useState(Date())
     const [isTextAlert, setIsTextAlert] = useState(false)
-
+    const [classID, setClassID] = useState("")
 
     // gets user email from session cookie
     console.log(session?.user?.email)
@@ -112,7 +112,6 @@ const TaskTracker: NextPage = () => {
     useEffect(() => {
         if (status === "unauthenticated") router.replace("/")
     }, [status])
-
 
     function handleDeleteTask() {
         console.log('delete task')
@@ -128,7 +127,8 @@ const TaskTracker: NextPage = () => {
             taskName: taskName,
             desc: desc,
             dateDue: dateDue,
-            isTextAlert: isTextAlert
+            isTextAlert: isTextAlert,
+            classID: classID
         }
         const requestOptions = {
             method: 'POST',
@@ -145,25 +145,27 @@ const TaskTracker: NextPage = () => {
         setDateDue(Date())
         setIsTextAlert(false)
 
-        onCloseAdd();
+        onCloseAdd()
     }
 
 
     if (status === "authenticated") {
         return (
             <>
-                {/* Add task dialog */}
+                {/* Add task modal */}
                 <Modal isOpen={isOpenAdd} onClose={onCloseAdd}>
                     <ModalOverlay/>
                     <ModalContent as={"form"} onSubmit={handleSubmit}>
                         <ModalHeader>Add Task</ModalHeader>
                         <ModalCloseButton/>
                         <ModalBody>
+                            {/* Form for add task */}
                             <FormControl>
                                 <FormLabel>
                                     Task
                                 </FormLabel>
-                                <Input type={"text"} placeholder="New Task" onChange={(e) => setTaskName(e.target.value)}/>
+                                <Input type={"text"} placeholder="New Task"
+                                       onChange={(e) => setTaskName(e.target.value)}/>
                             </FormControl>
                             <br/>
                             <FormControl>
@@ -189,7 +191,9 @@ const TaskTracker: NextPage = () => {
                                 <FormLabel htmlFor='text-alerts' mb='0'>
                                     Enable email alerts?
                                 </FormLabel>
-                                <Switch id='text-alerts' isChecked={isTextAlert} onChange={()=>{setIsTextAlert(!isTextAlert)}}/>
+                                <Switch id='text-alerts' isChecked={isTextAlert} onChange={() => {
+                                    setIsTextAlert(!isTextAlert)
+                                }}/>
                             </FormControl>
                         </ModalBody>
                         <ModalFooter>
@@ -221,14 +225,15 @@ const TaskTracker: NextPage = () => {
                     </AlertDialogContent>
                 </AlertDialog>
 
-                {/*  */}
+                {/* Start of page */}
                 <FloatingNavbar/>
                 <Flex justifyContent="center" flexWrap="wrap" pt={55}>
                     {/* Builds out cards by class */}
                     {testUser.classes.map((classObject) => {
                         return (
                             <Card key={classObject._id} width={'350px'} p={2} m={1} size={"lg"}
-                                  bg={colorMode === "light" ? "gray.200" : "gray.700"}>
+                                  bg={colorMode === "light" ? "gray.200" : "gray.700"}
+                                  onClick={() => setClassID(classObject?._id || "")}>
                                 <CardHeader>
                                     <Flex justifyContent="space-between" alignItems="center">
                                         <Heading>{classObject.className}</Heading>

@@ -8,7 +8,7 @@ export interface ResponseFuncs {
 
 // Interface to define our Task model on the frontend
 export interface Task {
-    _id?: number
+    _id?: string
     taskName: string
     desc: string
     dateDue: Date
@@ -16,14 +16,14 @@ export interface Task {
 }
 // Interface to define our Class model on the frontend
 export interface Class {
-    _id?: number
+    _id?: string
     className: string
     tasks: Task[]
 }
 
 // Interface to define our User model on the frontend
 export interface User {
-    _id?: number
+    _id?: string
     fName: string
     lName: string
     classes: Class[]
