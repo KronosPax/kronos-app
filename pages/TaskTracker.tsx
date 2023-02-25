@@ -147,6 +147,29 @@ const TaskTracker: NextPage = () => {
     }
 
 
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        const registerInfo = {
+            email: 'test',
+            className: 'math',
+            taskName: 'hw1',
+            desc: 'scary math',
+            dateDue: Date(),
+            isTextAlert: true
+        };
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(registerInfo)
+        };
+
+        const res: Response = await fetch('/api/createTask', requestOptions)
+        console.log(res)
+        console.log(res)}
+
+
+
+
     if (status === "authenticated") {
         return (
             <>
