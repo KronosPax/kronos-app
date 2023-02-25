@@ -16,10 +16,7 @@ import {useSession, signOut} from "next-auth/react";
 
 const FloatingNavbar: React.FC = () => {
     const {colorMode, toggleColorMode} = useColorMode();
-    const { status } = useSession()
-    const handleSignOut = async () => {
-        await signOut();
-    };
+    const {status} = useSession()
 
 
     return (
@@ -48,7 +45,8 @@ const FloatingNavbar: React.FC = () => {
                             <MenuItem icon={<SettingsIcon/>}>
                                 Settings
                             </MenuItem>
-                            <MenuItem onClick={handleSignOut} icon={<ArrowRightIcon/>}>
+                            <MenuItem onClick={async () => {await signOut()
+                            }} icon={<ArrowRightIcon/>}>
                                 Sign Out
                             </MenuItem>
                         </MenuList>
