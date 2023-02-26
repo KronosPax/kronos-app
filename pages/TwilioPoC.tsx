@@ -5,10 +5,12 @@ import { BaseSyntheticEvent, useState } from 'react';
 
 const Home: NextPage = () => {
     const [phone, setPhone] = useState("");
+    const [dueDate, setDate] = useState("");
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
+
 
     const sendMessage = async (e: BaseSyntheticEvent) => {
         e.preventDefault();
@@ -20,7 +22,7 @@ const Home: NextPage = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ phone: phone, message: message }),
+            body: JSON.stringify({ phone: phone, message: message, dueDate: dueDate }),
         });
         const apiResponse = await res.json();
 
@@ -49,6 +51,17 @@ const Home: NextPage = () => {
                         required
                     />
                 </div>
+                {/* due date input field test  */}
+                <div className={styles.formGroup}>
+                    <label htmlFor='dueDate'>Due Date</label>
+                    <textarea
+                        onChange={(e) => setDate(e.target.value)}
+                        id='dueDate'
+                        placeholder='dueDate'
+                        className={styles.textarea}
+                    ></textarea>
+                </div>
+
                 <div className={styles.formGroup}>
                     <label htmlFor='message'>Message</label>
                     <textarea
