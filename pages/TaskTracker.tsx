@@ -65,11 +65,11 @@ const TaskTracker: NextPage = () => {
         lName: 'User',
         classes: [
             {
-                _id: '1',
+                _id: '6e69561d-a9c7-40d5-bd51-ce331ac4fb52',
                 className: 'Business Management',
                 tasks: [
                     {
-                        _id: '1',
+                        _id: '2',
                         taskName: 'Read chapter six',
                         desc: 'annotate in notebook',
                         dateDue: new Date("2023-03-15T18:24:00"),
@@ -119,7 +119,7 @@ const TaskTracker: NextPage = () => {
     const [desc, setDesc] = useState("")
     const [dateDue, setDateDue] = useState(Date())
     const [isTextAlert, setIsTextAlert] = useState(false)
-    const [classID, setClassID] = useState("")
+    const [classId, setClassId] = useState("")
     const [className, setClassName] = useState("")
 
     useEffect(() => {
@@ -142,7 +142,7 @@ const TaskTracker: NextPage = () => {
             desc: desc,
             dateDue: dateDue,
             isTextAlert: isTextAlert,
-            classID: classID
+            classId: classId
         }
         const requestOptions = {
             method: 'POST',
@@ -151,8 +151,8 @@ const TaskTracker: NextPage = () => {
         }
         console.log(requestOptions)
 
-        // const res: Response = await fetch('/api/addTask', requestOptions)
-        // code to handle form submission
+        const res: Response = await fetch('/api/createTask', requestOptions)
+        console.log(res)
 
         setTaskName('')
         setDesc('')
@@ -177,12 +177,11 @@ const TaskTracker: NextPage = () => {
             body: JSON.stringify(classForm)
         }
 
-        // const res: Response = await fetch('/api/createClass', requestOptions)
-        // console.log(res)
         console.log(requestOptions)
 
-        // const res: Response = await fetch('/api/addTask', requestOptions)
-        // code to handle form submission
+        const res: Response = await fetch('/api/createClass', requestOptions)
+        console.log(res)
+
         setClassName('')
 
         onCloseAddClass()
@@ -334,7 +333,7 @@ const TaskTracker: NextPage = () => {
                                         <Tooltip label="Add Task" aria-label="A tooltip">
                                             <IconButton bg="transparent" aria-label="Add Task" icon={<AddIcon/>}
                                                         onClick={() => {
-                                                            setClassID(classObject?._id || "")
+                                                            setClassId(classObject?._id || "")
                                                             onOpenAddTask()
                                                         }}/>
                                         </Tooltip>

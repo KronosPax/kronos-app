@@ -24,7 +24,9 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-focus-lock": "^2.9.4",
-    "twilio": "^4.7.2"
+    "twilio": "^4.7.2",
+    "uuid": "^9.0.0",
+    "@types/uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "18.14.0",
