@@ -154,6 +154,23 @@ const TaskTracker: NextPage = () => {
         const res: Response = await fetch('/api/createTask', requestOptions)
         console.log(res)
 
+        const smsMessage = taskName + "is due at: " + dateDue.toString()
+
+        const smsForm = {
+            message: smsMessage,
+            dateDue: dateDue,
+        }
+
+        const schedulerOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(smsForm)
+        }
+        console.log(schedulerOptions)
+
+        const scheduler: Response = await fetch('/api/sendMessage', requestOptions)
+        console.log(scheduler)
+
         setTaskName('')
         setDesc('')
         setDateDue(Date())
