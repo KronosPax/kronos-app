@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 // CONNECTING TO MONGOOSE (Get Database Url from .env.local)
-const { DATABASE_URL } = process.env
+const {DATABASE_URL} = process.env
 
 // connection function
 export const connect = async () => {
@@ -10,6 +10,22 @@ export const connect = async () => {
         .catch(err => console.log(err))
     console.log("Mongoose Connection Established")
 
+    // OUR TASK SCHEMA
+    const TaskSchema = new mongoose.Schema({
+        _id: {type: String, required: true},
+        taskName: {type: String, required: true},
+        dateDue: {type: Date, required: true},  // fix later when object type is known
+        isTextAlert: {type: Boolean, required: true}, // is true when user wants text notification
+        desc: String // description of task
+    });
+
+    // OUR CLASS SCHEMA
+    const ClassSchema = new mongoose.Schema({
+        _id: {type: String, required: true},
+        className: {type: String, required: true},
+        tasks: {type: [TaskSchema]}
+    });
+
     // OUR USER SCHEMA
     const UserSchema = new mongoose.Schema({
         email: {type: String, required: true},
@@ -17,10 +33,11 @@ export const connect = async () => {
         fName: {type: String, required: true},
         lName: {type: String, required: true},
         phone: String,
+        classes: {type: [ClassSchema]}
     });
 
     // OUR USER MODEL
     const User = mongoose.models.User || mongoose.model("User", UserSchema)
 
-    return { conn, User }
+    return {conn, User}
 }

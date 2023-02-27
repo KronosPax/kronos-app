@@ -1,19 +1,26 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import twilio from 'twilio';
 
-export default function sendMessage(req: NextApiRequest, res: NextApiResponse) {
+export default function scheduleMessage(req: NextApiRequest, res: NextApiResponse) {
     const accountSid = <string>process.env.TWILIO_ACCOUNT_SID;
     const token = <string>process.env.TWILIO_AUTH_TOKEN;
+    const messagingServiceSid = <string>process.env.TWILIO_MESSAGING_SID;
+    const twilioPhone = <string>process.env.TWILIO_PHONE;
+    const targetPhone = <string>process.env.TWILIO_TARGET_PHONE;
     const client = twilio(accountSid, token);
-    const { phone, message } = req.body;
-    // console.log(phone, message);
+    const { message, dateDue } = req.body;
+
+
     client.messages
         .create({
             body: message,
-            from: '+18146798026',
-            to: phone,
+            messagingServiceSid: messagingServiceSid,
+            from: twilioPhone,
+            to: targetPhone,
+            scheduleType: 'fixed',
+            sendAt: new Date(dateDue),
         })
-        .then((message) =>
+        .then(() =>
             res.json({
                 success: true,
             })
