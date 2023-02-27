@@ -154,22 +154,29 @@ const TaskTracker: NextPage = () => {
         const res: Response = await fetch('/api/createTask', requestOptions)
         console.log(res)
 
-        const smsMessage = taskName + "is due at: " + dateDue.toString()
+        if (isTextAlert){
+            const smsMessage = taskName + " is due at: " + new Date(dateDue).toLocaleString('en-US', {
+                dateStyle: 'medium',
+                timeStyle: "medium",
+            })
+            console.log(smsMessage)
 
-        const smsForm = {
-            message: smsMessage,
-            dateDue: dateDue,
+            const smsForm = {
+                message: smsMessage,
+                dateDue: dateDue,
+            }
+
+            const schedulerOptions = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(smsForm)
+            }
+            console.log(schedulerOptions)
+
+            const scheduler: Response = await fetch('/api/scheduleMessage', schedulerOptions)
+            console.log(scheduler)
         }
 
-        const schedulerOptions = {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(smsForm)
-        }
-        console.log(schedulerOptions)
-
-        const scheduler: Response = await fetch('/api/sendMessage', requestOptions)
-        console.log(scheduler)
 
         setTaskName('')
         setDesc('')
@@ -367,16 +374,9 @@ const TaskTracker: NextPage = () => {
                                                         {task.taskName}
                                                     </Box>
                                                     <Box as="span" flex='1' textAlign='right' maxW={'35%'}>
-                                                        Due:<br/>{task.dateDue.toLocaleString('en-US', {
-                                                        hour: 'numeric',
-                                                        minute: 'numeric',
-                                                    })}
+                                                        Due:<br/>{task.dateDue.toLocaleString('en-US', {timeStyle: "short"})}
                                                         <br/>
-                                                        {task.dateDue.toLocaleString('en-US', {
-                                                            month: 'numeric',
-                                                            day: 'numeric',
-                                                            year: 'numeric',
-                                                        })}
+                                                        {task.dateDue.toLocaleString('en-US', {dateStyle: 'medium'})}
                                                     </Box>
                                                     <AccordionIcon style={{position: 'relative', top: '-25px'}}/>
                                                 </AccordionButton>

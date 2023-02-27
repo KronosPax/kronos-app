@@ -100,10 +100,10 @@ export const Login: NextPage = () => {
                 </FormControl>
                 <br/>
                 <HStack justify={'space-between'}>
-                    <Button type="submit">
+                    <Button colorScheme={'teal'} type="submit">
                         Login
                     </Button>
-                    <Button>
+                    <Button colorScheme={'teal'}>
                         <Link href="/Register">Register</Link>
                     </Button>
                 </HStack>

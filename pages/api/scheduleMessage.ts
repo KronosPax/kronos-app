@@ -1,26 +1,26 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import twilio from 'twilio';
-import {iso8601} from "@aws-sdk/signature-v4/dist-types/utilDate";
 
-export default function sendMessage(req: NextApiRequest, res: NextApiResponse) {
+export default function scheduleMessage(req: NextApiRequest, res: NextApiResponse) {
     const accountSid = <string>process.env.TWILIO_ACCOUNT_SID;
     const token = <string>process.env.TWILIO_AUTH_TOKEN;
+    const messagingServiceSid = <string>process.env.TWILIO_MESSAGING_SID;
+    const twilioPhone = <string>process.env.TWILIO_PHONE;
+    const targetPhone = <string>process.env.TWILIO_TARGET_PHONE;
     const client = twilio(accountSid, token);
     const { message, dateDue } = req.body;
-    // console.log(phone, message);
 
-    // proper ISO 8601 formatted datetime string: new Date("2023-02-25T16:31:00")
 
     client.messages
         .create({
             body: message,
-            messagingServiceSid: 'MG47d922c75d147d3df96f7a8c299ae03d',
-            from: '+18146798026',
-            to: '+15124668011',
+            messagingServiceSid: messagingServiceSid,
+            from: twilioPhone,
+            to: targetPhone,
             scheduleType: 'fixed',
-            sendAt: dateDue,
+            sendAt: new Date(dateDue),
         })
-        .then((message) =>
+        .then(() =>
             res.json({
                 success: true,
             })
