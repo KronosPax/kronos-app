@@ -54,6 +54,7 @@ import {
 } from "@chakra-ui/icons";
 import Image from "next/image";
 import kpLogo from "../public/kpLogo.svg";
+import useSWR from 'swr';
 
 
 const TaskTracker: NextPage = () => {
@@ -122,9 +123,11 @@ const TaskTracker: NextPage = () => {
     const [classId, setClassId] = useState("")
     const [className, setClassName] = useState("")
 
+
     useEffect(() => {
         if (status === "unauthenticated") router.replace("/")
     }, [status])
+
 
     function handleDeleteTask() {
         console.log('delete task')
@@ -154,7 +157,7 @@ const TaskTracker: NextPage = () => {
         const res: Response = await fetch('/api/createTask', requestOptions)
         console.log(res)
 
-        if (isTextAlert){
+        if (isTextAlert) {
             const smsMessage = taskName + " is due at: " + new Date(dateDue).toLocaleString('en-US', {
                 dateStyle: 'medium',
                 timeStyle: "medium",
@@ -182,7 +185,7 @@ const TaskTracker: NextPage = () => {
         setDesc('')
         setDateDue(Date())
         setIsTextAlert(false)
-
+        await mutate()
         onCloseAddTask()
     }
 
@@ -207,12 +210,33 @@ const TaskTracker: NextPage = () => {
         console.log(res)
 
         setClassName('')
-
+        await mutate()
         onCloseAddClass()
     }
 
 
-    if (status === "authenticated") {
+
+
+    const userEmail = session?.user?.email
+
+    const fetcher = (url: RequestInfo | URL, userEmail: any) => fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(userEmail),
+    }).then((res) => res.json())
+
+    const {
+        data: user,
+        error,
+        isLoading,
+        mutate
+    } = useSWR(['/api/getUser', userEmail], ([url, userEmail]) => fetcher(url, userEmail))
+
+    console.log('swr')
+    console.log(user)
+
+
+    if (status === "authenticated" && !isLoading) {
         return (
             <>
                 {/* Add task modal */}
@@ -347,7 +371,7 @@ const TaskTracker: NextPage = () => {
                 </Flex>
                 <Flex justifyContent="center" flexWrap="wrap" pt={55}>
                     {/* Builds out cards by class */}
-                    {testUser.classes.map((classObject) => {
+                    {user.classes.map((classObject) => {
                         return (
                             <Card key={classObject._id} width={'350px'} p={2} m={1} size={"lg"}
                                   bg={colorMode === "light" ? "gray.300" : "gray.700"}>
