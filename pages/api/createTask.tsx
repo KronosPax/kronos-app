@@ -20,10 +20,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             const userT = await User.findOne({email: req.body.email}) // find user by unique email
 
             if (userT != null) {
-                console.log("user exists")
-                console.log(userT)
 
-                console.log("creating new task")
+
                 const newTask = {
                     _id: uuidv4(), // unique ID generation
                     taskName: req.body.taskName, // task name

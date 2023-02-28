@@ -1,111 +1,55 @@
 import {NextPage} from "next";
 import {
-    Box,
-    Card,
-    CardHeader,
-    Heading,
-    useColorMode,
-    AccordionItem,
     Accordion,
     AccordionButton,
     AccordionIcon,
+    AccordionItem,
     AccordionPanel,
-    Flex,
-    IconButton,
-    Tooltip,
     AlertDialog,
-    Button,
     AlertDialogBody,
-    AlertDialogOverlay,
-    AlertDialogFooter,
     AlertDialogContent,
+    AlertDialogFooter,
     AlertDialogHeader,
-    useDisclosure,
-    Input,
+    AlertDialogOverlay,
+    Box,
+    Button,
+    Card,
+    CardHeader,
+    Flex,
     FormControl,
     FormLabel,
-    ModalOverlay,
-    ModalBody,
-    ModalHeader,
-    Textarea,
-    ModalContent,
-    Modal,
-    ModalCloseButton,
-    ModalFooter,
-    Switch,
+    Heading,
     HStack,
+    IconButton,
+    Input,
     Menu,
     MenuButton,
+    MenuItem,
     MenuList,
-    MenuItem
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Spinner,
+    Switch,
+    Textarea,
+    Tooltip,
+    useColorMode,
+    useDisclosure
 } from "@chakra-ui/react";
-import {User} from "../utils/types";
 import React, {useEffect, useRef, useState} from "react";
 import {signOut, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
-import {
-    AddIcon,
-    ArrowRightIcon,
-    DeleteIcon,
-    HamburgerIcon,
-    MoonIcon,
-    SettingsIcon,
-    SunIcon
-} from "@chakra-ui/icons";
+import {AddIcon, ArrowRightIcon, DeleteIcon, HamburgerIcon, MoonIcon, SettingsIcon, SunIcon} from "@chakra-ui/icons";
 import Image from "next/image";
 import kpLogo from "../public/kpLogo.svg";
+import useSWR from 'swr';
 
 
 const TaskTracker: NextPage = () => {
-
-    // for testing frontend
-    const testUser: User = {
-        _id: '1',
-        fName: 'Test',
-        lName: 'User',
-        classes: [
-            {
-                _id: '6e69561d-a9c7-40d5-bd51-ce331ac4fb52',
-                className: 'Business Management',
-                tasks: [
-                    {
-                        _id: '2',
-                        taskName: 'Read chapter six',
-                        desc: 'annotate in notebook',
-                        dateDue: new Date("2023-03-15T18:24:00"),
-                        isTextAlert: true
-                    },
-                    {
-                        _id: '2',
-                        taskName: 'start paper',
-                        desc: 'get outline started',
-                        dateDue: new Date("2023-02-28T12:24:00"),
-                        isTextAlert: false
-                    }
-                ]
-            },
-            {
-                _id: '2',
-                className: 'Architecture',
-                tasks: [
-                    {
-                        _id: '1',
-                        taskName: 'hw1',
-                        desc: 'registers what are they?!?!',
-                        dateDue: new Date("2023-03-19T13:24:00"),
-                        isTextAlert: true
-                    },
-                    {
-                        _id: '2',
-                        taskName: 'choose final presentation topic',
-                        desc: 'Aliens?',
-                        dateDue: new Date("2023-03-01T17:24:00"),
-                        isTextAlert: false
-                    }
-                ]
-            }
-        ]
-    };
 
     // Set up state
     const {isOpen: isOpenDelTask, onOpen: onOpenDelTask, onClose: onCloseDelTask} = useDisclosure()
@@ -122,9 +66,11 @@ const TaskTracker: NextPage = () => {
     const [classId, setClassId] = useState("")
     const [className, setClassName] = useState("")
 
+
     useEffect(() => {
         if (status === "unauthenticated") router.replace("/")
-    }, [status])
+    }, [status, router])
+
 
     function handleDeleteTask() {
         console.log('delete task')
@@ -134,10 +80,9 @@ const TaskTracker: NextPage = () => {
     const handleTaskSubmit = async (event: any) => {
         event.preventDefault();
 
-        console.log('submitted form')
 
         const taskForm = {
-            email: session?.user?.email,
+            email: session?.user?.email ?? "",
             taskName: taskName,
             desc: desc,
             dateDue: dateDue,
@@ -149,17 +94,14 @@ const TaskTracker: NextPage = () => {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(taskForm)
         }
-        console.log(requestOptions)
 
-        const res: Response = await fetch('/api/createTask', requestOptions)
-        console.log(res)
+        await fetch('/api/createTask', requestOptions)
 
-        if (isTextAlert){
+        if (isTextAlert) {
             const smsMessage = taskName + " is due at: " + new Date(dateDue).toLocaleString('en-US', {
                 dateStyle: 'medium',
                 timeStyle: "medium",
             })
-            console.log(smsMessage)
 
             const smsForm = {
                 message: smsMessage,
@@ -171,10 +113,8 @@ const TaskTracker: NextPage = () => {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(smsForm)
             }
-            console.log(schedulerOptions)
 
-            const scheduler: Response = await fetch('/api/scheduleMessage', schedulerOptions)
-            console.log(scheduler)
+            await fetch('/api/scheduleMessage', schedulerOptions)
         }
 
 
@@ -182,17 +122,16 @@ const TaskTracker: NextPage = () => {
         setDesc('')
         setDateDue(Date())
         setIsTextAlert(false)
-
+        await mutate()
         onCloseAddTask()
     }
 
     const handleClassSubmit = async (event: any) => {
         event.preventDefault();
 
-        console.log('submitted form')
 
         const classForm = {
-            email: session?.user?.email,
+            email: session?.user?.email ?? "",
             className: className,
         }
         const requestOptions = {
@@ -201,18 +140,30 @@ const TaskTracker: NextPage = () => {
             body: JSON.stringify(classForm)
         }
 
-        console.log(requestOptions)
 
-        const res: Response = await fetch('/api/createClass', requestOptions)
-        console.log(res)
+        await fetch('/api/createClass', requestOptions)
 
         setClassName('')
-
+        await mutate()
         onCloseAddClass()
     }
 
+    const userEmail = session?.user?.email ?? "";
 
-    if (status === "authenticated") {
+    const fetcher = (url: RequestInfo | URL, userEmail: any) => fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(userEmail),
+    }).then((res) => res.json())
+
+    const {
+        data: user,
+        isLoading,
+        mutate
+    } = useSWR(['/api/getUser', userEmail], ([url, userEmail]) => fetcher(url, userEmail))
+
+
+    if (status === "authenticated" && !isLoading) {
         return (
             <>
                 {/* Add task modal */}
@@ -347,7 +298,7 @@ const TaskTracker: NextPage = () => {
                 </Flex>
                 <Flex justifyContent="center" flexWrap="wrap" pt={55}>
                     {/* Builds out cards by class */}
-                    {testUser.classes.map((classObject) => {
+                    {user.classes.map((classObject: { _id: React.Key; className: string; tasks: { _id: React.Key; taskName: string; dateDue: string; desc: string; }[]; }) => {
                         return (
                             <Card key={classObject._id} width={'350px'} p={2} m={1} size={"lg"}
                                   bg={colorMode === "light" ? "gray.300" : "gray.700"}>
@@ -357,6 +308,7 @@ const TaskTracker: NextPage = () => {
                                         <Tooltip label="Add Task" aria-label="A tooltip">
                                             <IconButton bg="transparent" aria-label="Add Task" icon={<AddIcon/>}
                                                         onClick={() => {
+                                                            // @ts-ignore
                                                             setClassId(classObject?._id || "")
                                                             onOpenAddTask()
                                                         }}/>
@@ -364,7 +316,7 @@ const TaskTracker: NextPage = () => {
                                     </Flex>
                                 </CardHeader>
                                 {/* List task contained within class object */}
-                                {classObject.tasks.map((task) => (
+                                {classObject.tasks.map((task: { _id: React.Key; taskName: string; dateDue: string; desc: string; }) => (
                                     <Card key={task._id} my={1} size={"lg"}
                                           bg={colorMode === "light" ? "white" : "gray.600"}>
                                         <Accordion allowMultiple>
@@ -374,9 +326,9 @@ const TaskTracker: NextPage = () => {
                                                         {task.taskName}
                                                     </Box>
                                                     <Box as="span" flex='1' textAlign='right' maxW={'35%'}>
-                                                        Due:<br/>{task.dateDue.toLocaleString('en-US', {timeStyle: "short"})}
+                                                        Due:<br/>{new Date(task.dateDue).toLocaleString('en-US', {timeStyle: "short"})}
                                                         <br/>
-                                                        {task.dateDue.toLocaleString('en-US', {dateStyle: 'medium'})}
+                                                        {new Date(task.dateDue).toLocaleString('en-US', {dateStyle: 'medium'})}
                                                     </Box>
                                                     <AccordionIcon style={{position: 'relative', top: '-25px'}}/>
                                                 </AccordionButton>
@@ -402,7 +354,7 @@ const TaskTracker: NextPage = () => {
             </>
         )
     } else {
-        return <Box>Loading</Box>
+        return <Flex mt={60} justify={"center"} align={"center"}><Spinner size='xl'/></Flex>
     }
 }
 export default TaskTracker

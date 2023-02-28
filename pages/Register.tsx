@@ -53,14 +53,14 @@ export const Register: NextPage = () => {
         };
 
         const res: Response = await fetch('/api/auth/registerUser', requestOptions)
-        console.log(res)
+
         if (!res.ok) {
             const badRes = await res.json()
             setRegError(badRes.error)
             onOpen();
         } else {
             const user = await res.json()
-            console.log(user)
+
             await router.push("/")
         }
     }

@@ -1,9 +1,8 @@
 import {NextApiRequest, NextApiResponse} from "next"
 import {connect} from "../../utils/connection"
 import {ResponseFuncs} from "../../utils/types"
-import {v4 as uuidv4} from "uuid"
 
-// Called by nextauth signIn() compared recieved data against DB entries looks for match
+
 // Using mongoose to interface with MongoDB instance, schema and model are defined in connections.ts
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     //capture request method, we type it as a key of ResponseFunc to reduce typing later
@@ -17,26 +16,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // RESPONSE FOR GET REQUESTS
         POST: async (req: NextApiRequest, res: NextApiResponse) => {
             const {User} = await connect() // connect to database
-            const userT = await User.findOne({email: req.body.email})
 
-            if (userT != null) {
+            const user = await User.findOne({
+                email: req.body
+            })
 
-
-                const newClass = {
-                    _id: uuidv4(),  // unique ID generation
-                    className: req.body.className,
-                }
-                userT.classes.push(newClass)
-
-                await userT.save()
+            if (user !== null) {
 
 
-                res.status(200).json({message: "Class Created"})
+                res.status(200).json(user)
             } else {
-                res.status(404).json({message: "User not found"})
+                res.status(200).json(null)
             }
-        }
-
+        },
     }
 
     // Check if there is a response for the particular method, if so invoke it, if not response with an error

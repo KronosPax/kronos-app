@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import {NextApiRequest, NextApiResponse} from 'next';
 import twilio from 'twilio';
 
 export default function scheduleMessage(req: NextApiRequest, res: NextApiResponse) {
@@ -8,7 +8,7 @@ export default function scheduleMessage(req: NextApiRequest, res: NextApiRespons
     const twilioPhone = <string>process.env.TWILIO_PHONE;
     const targetPhone = <string>process.env.TWILIO_TARGET_PHONE;
     const client = twilio(accountSid, token);
-    const { message, dateDue } = req.body;
+    const {message, dateDue} = req.body;
 
 
     client.messages
@@ -26,7 +26,7 @@ export default function scheduleMessage(req: NextApiRequest, res: NextApiRespons
             })
         )
         .catch((error) => {
-            console.log(error);
+
             res.json({
                 success: false,
             });

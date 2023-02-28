@@ -43,7 +43,7 @@ export const Login: NextPage = () => {
             password: pwd,
             redirect: false
         });
-        console.log(res)
+
         if (res === undefined) {
             throw new Error('undefined')
         }
@@ -57,7 +57,7 @@ export const Login: NextPage = () => {
 
     useEffect(() => {
         if (status === "authenticated") router.replace("/TaskTracker");
-    }, [status]);
+    }, [status, router]);
     return (
         <Box
             w={['full', 'md']}
