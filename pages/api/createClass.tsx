@@ -20,10 +20,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             const userT = await User.findOne({email: req.body.email})
 
             if (userT != null) {
-                console.log("user exists")
-                console.log(userT)
 
-                console.log("creating class")
+
                 const newClass = {
                     _id: uuidv4(),  // unique ID generation
                     className: req.body.className,
@@ -31,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 userT.classes.push(newClass)
 
                 await userT.save()
-                console.log(userT)
+
 
                 res.status(200).json({message: "Class Created"})
             } else {
