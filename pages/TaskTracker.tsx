@@ -65,6 +65,7 @@ const TaskTracker: NextPage = () => {
     const [isTextAlert, setIsTextAlert] = useState(false)
     const [classId, setClassId] = useState("")
     const [className, setClassName] = useState("")
+    const [deleteTaskId, setDeleteTaskId] = useState("")
 
 
     useEffect(() => {
@@ -72,8 +73,27 @@ const TaskTracker: NextPage = () => {
     }, [status, router])
 
 
-    function handleDeleteTask() {
+    const handleDeleteTask = async (event: any) => {
+        event.preventDefault();
+
+        console.log(classId)
+        console.log(deleteTaskId)
+
+        const taskForm = {
+            email: session?.user?.email ?? "",
+            taskId: deleteTaskId,
+            classId: classId
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(taskForm)
+        }
+
+        await fetch('/api/deleteTask', requestOptions)
         console.log('delete task')
+
+        await mutate()
         onCloseDelTask()
     }
 
@@ -301,17 +321,13 @@ const TaskTracker: NextPage = () => {
                     {user.classes.map((classObject: { _id: React.Key; className: string; tasks: { _id: React.Key; taskName: string; dateDue: string; desc: string; }[]; }) => {
                         return (
                             <Card key={classObject._id} width={'350px'} p={2} m={1} size={"lg"}
-                                  bg={colorMode === "light" ? "gray.300" : "gray.700"}>
+                                  bg={colorMode === "light" ? "gray.300" : "gray.700"} onClick={() => {setClassId(String(classObject?._id || ""))}}>
                                 <CardHeader>
                                     <Flex justifyContent="space-between" alignItems="center">
                                         <Heading>{classObject.className}</Heading>
                                         <Tooltip label="Add Task" aria-label="A tooltip">
                                             <IconButton bg="transparent" aria-label="Add Task" icon={<AddIcon/>}
-                                                        onClick={() => {
-                                                            // @ts-ignore
-                                                            setClassId(classObject?._id || "")
-                                                            onOpenAddTask()
-                                                        }}/>
+                                                        onClick={onOpenAddTask}/>
                                         </Tooltip>
                                     </Flex>
                                 </CardHeader>
@@ -338,8 +354,11 @@ const TaskTracker: NextPage = () => {
                                                             {task.desc}
                                                         </Box>
                                                         <Tooltip label="Delete Task" aria-label="A tooltip">
-                                                            <IconButton onClick={onOpenDelTask} bg="transparent"
-                                                                        aria-label="Delete Task" icon={<DeleteIcon/>}/>
+                                                            <IconButton aria-label="Delete Task" icon={<DeleteIcon/>}
+                                                                        bg="transparent" onClick={() => {
+                                                                onOpenDelTask()
+                                                                setDeleteTaskId(String(task._id))
+                                                            }}/>
                                                         </Tooltip>
                                                     </Flex>
                                                 </AccordionPanel>
