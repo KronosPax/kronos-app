@@ -43,7 +43,16 @@ import {
 import React, {useEffect, useRef, useState} from "react";
 import {signOut, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
-import {AddIcon, ArrowRightIcon, DeleteIcon, HamburgerIcon, MoonIcon, SettingsIcon, SunIcon} from "@chakra-ui/icons";
+import {
+    AddIcon,
+    ArrowRightIcon,
+    CloseIcon,
+    DeleteIcon,
+    HamburgerIcon,
+    MoonIcon,
+    SettingsIcon,
+    SunIcon
+} from "@chakra-ui/icons";
 import Image from "next/image";
 import kpLogo from "../public/kpLogo.svg";
 import useSWR from 'swr';
@@ -53,6 +62,7 @@ const TaskTracker: NextPage = () => {
 
     // Set up state
     const {isOpen: isOpenDelTask, onOpen: onOpenDelTask, onClose: onCloseDelTask} = useDisclosure()
+    const {isOpen: isOpenDelClass, onOpen: onOpenDelClass, onClose: onCloseDelClass} = useDisclosure()
     const {isOpen: isOpenAddTask, onOpen: onOpenAddTask, onClose: onCloseAddTask} = useDisclosure()
     const {isOpen: isOpenAddClass, onOpen: onOpenAddClass, onClose: onCloseAddClass} = useDisclosure()
     const cancelRef = useRef(null)
@@ -65,6 +75,7 @@ const TaskTracker: NextPage = () => {
     const [isTextAlert, setIsTextAlert] = useState(false)
     const [classId, setClassId] = useState("")
     const [className, setClassName] = useState("")
+    const [deleteTaskId, setDeleteTaskId] = useState("")
 
 
     useEffect(() => {
@@ -72,8 +83,42 @@ const TaskTracker: NextPage = () => {
     }, [status, router])
 
 
-    function handleDeleteTask() {
-        console.log('delete task')
+    const handleDeleteClass = async (event: any) => {
+        event.preventDefault();
+
+        const classForm = {
+            email: session?.user?.email ?? "",
+            classId: classId
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(classForm)
+        }
+
+        await fetch('/api/deleteClass', requestOptions)
+
+        await mutate()
+        onCloseDelClass()
+
+    }
+    const handleDeleteTask = async (event: any) => {
+        event.preventDefault();
+
+        const taskForm = {
+            email: session?.user?.email ?? "",
+            taskId: deleteTaskId,
+            classId: classId
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(taskForm)
+        }
+
+        await fetch('/api/deleteTask', requestOptions)
+
+        await mutate()
         onCloseDelTask()
     }
 
@@ -163,6 +208,8 @@ const TaskTracker: NextPage = () => {
     } = useSWR(['/api/getUser', userEmail], ([url, userEmail]) => fetcher(url, userEmail))
 
 
+
+
     if (status === "authenticated" && !isLoading) {
         return (
             <>
@@ -198,6 +245,7 @@ const TaskTracker: NextPage = () => {
                                 <Input
                                     placeholder="Select Date and Time"
                                     type="datetime-local"
+                                    value={new Date(dateDue).toISOString().slice(0, 16)}
                                     onChange={(e) => setDateDue(e.target.value)}
                                     variant={'filled'}
                                 />
@@ -205,7 +253,7 @@ const TaskTracker: NextPage = () => {
                             <br/>
                             <FormControl display='flex' alignItems='center'>
                                 <FormLabel htmlFor='text-alerts' mb='0'>
-                                    Enable email alerts?
+                                    Enable text alerts?
                                 </FormLabel>
                                 <Switch id='text-alerts' isChecked={isTextAlert} onChange={() => {
                                     setIsTextAlert(!isTextAlert)
@@ -235,6 +283,27 @@ const TaskTracker: NextPage = () => {
                                 Cancel
                             </Button>
                             <Button colorScheme="red" onClick={handleDeleteTask} ml={3}>
+                                Delete
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+
+                {/* Delete class confirmation dialog */}
+                <AlertDialog isOpen={isOpenDelClass} leastDestructiveRef={cancelRef} onClose={onCloseDelClass}>
+                    <AlertDialogOverlay/>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            Delete Class
+                        </AlertDialogHeader>
+                        <AlertDialogBody>
+                            Are you sure you want to delete this class? You can&apos;t undo this action afterwards.
+                        </AlertDialogBody>
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onCloseDelClass}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme="red" onClick={handleDeleteClass} ml={3}>
                                 Delete
                             </Button>
                         </AlertDialogFooter>
@@ -301,17 +370,21 @@ const TaskTracker: NextPage = () => {
                     {user.classes.map((classObject: { _id: React.Key; className: string; tasks: { _id: React.Key; taskName: string; dateDue: string; desc: string; }[]; }) => {
                         return (
                             <Card key={classObject._id} width={'350px'} p={2} m={1} size={"lg"}
-                                  bg={colorMode === "light" ? "gray.300" : "gray.700"}>
+                                  bg={colorMode === "light" ? "gray.300" : "gray.700"} onClick={() => {
+                                setClassId(String(classObject?._id || ""))
+                            }}>
+                                <Box>
+                                    <Tooltip label="Delete Class" aria-label="A tooltip">
+                                    <IconButton bg="transparent" aria-label="Delete Class" icon={<CloseIcon/>}
+                                                onClick={onOpenDelClass}/>
+                                    </Tooltip>
+                                </Box>
                                 <CardHeader>
                                     <Flex justifyContent="space-between" alignItems="center">
                                         <Heading>{classObject.className}</Heading>
                                         <Tooltip label="Add Task" aria-label="A tooltip">
                                             <IconButton bg="transparent" aria-label="Add Task" icon={<AddIcon/>}
-                                                        onClick={() => {
-                                                            // @ts-ignore
-                                                            setClassId(classObject?._id || "")
-                                                            onOpenAddTask()
-                                                        }}/>
+                                                        onClick={onOpenAddTask}/>
                                         </Tooltip>
                                     </Flex>
                                 </CardHeader>
@@ -338,8 +411,11 @@ const TaskTracker: NextPage = () => {
                                                             {task.desc}
                                                         </Box>
                                                         <Tooltip label="Delete Task" aria-label="A tooltip">
-                                                            <IconButton onClick={onOpenDelTask} bg="transparent"
-                                                                        aria-label="Delete Task" icon={<DeleteIcon/>}/>
+                                                            <IconButton aria-label="Delete Task" icon={<DeleteIcon/>}
+                                                                        bg="transparent" onClick={() => {
+                                                                onOpenDelTask()
+                                                                setDeleteTaskId(String(task._id))
+                                                            }}/>
                                                         </Tooltip>
                                                     </Flex>
                                                 </AccordionPanel>
