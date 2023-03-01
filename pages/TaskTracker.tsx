@@ -43,7 +43,16 @@ import {
 import React, {useEffect, useRef, useState} from "react";
 import {signOut, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
-import {AddIcon, ArrowRightIcon, DeleteIcon, HamburgerIcon, MoonIcon, SettingsIcon, SunIcon} from "@chakra-ui/icons";
+import {
+    AddIcon,
+    ArrowRightIcon,
+    CloseIcon,
+    DeleteIcon,
+    HamburgerIcon,
+    MoonIcon,
+    SettingsIcon,
+    SunIcon
+} from "@chakra-ui/icons";
 import Image from "next/image";
 import kpLogo from "../public/kpLogo.svg";
 import useSWR from 'swr';
@@ -53,6 +62,7 @@ const TaskTracker: NextPage = () => {
 
     // Set up state
     const {isOpen: isOpenDelTask, onOpen: onOpenDelTask, onClose: onCloseDelTask} = useDisclosure()
+    const {isOpen: isOpenDelClass, onOpen: onOpenDelClass, onClose: onCloseDelClass} = useDisclosure()
     const {isOpen: isOpenAddTask, onOpen: onOpenAddTask, onClose: onCloseAddTask} = useDisclosure()
     const {isOpen: isOpenAddClass, onOpen: onOpenAddClass, onClose: onCloseAddClass} = useDisclosure()
     const cancelRef = useRef(null)
@@ -73,11 +83,27 @@ const TaskTracker: NextPage = () => {
     }, [status, router])
 
 
-    const handleDeleteTask = async (event: any) => {
+    const handleDeleteClass = async (event: any) => {
         event.preventDefault();
 
-        console.log(classId)
-        console.log(deleteTaskId)
+        const classForm = {
+            email: session?.user?.email ?? "",
+            classId: classId
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(classForm)
+        }
+
+        await fetch('/api/deleteClass', requestOptions)
+
+        await mutate()
+        onCloseDelClass()
+
+    }
+    const handleDeleteTask = async (event: any) => {
+        event.preventDefault();
 
         const taskForm = {
             email: session?.user?.email ?? "",
@@ -91,7 +117,6 @@ const TaskTracker: NextPage = () => {
         }
 
         await fetch('/api/deleteTask', requestOptions)
-        console.log('delete task')
 
         await mutate()
         onCloseDelTask()
@@ -183,6 +208,8 @@ const TaskTracker: NextPage = () => {
     } = useSWR(['/api/getUser', userEmail], ([url, userEmail]) => fetcher(url, userEmail))
 
 
+
+
     if (status === "authenticated" && !isLoading) {
         return (
             <>
@@ -261,6 +288,27 @@ const TaskTracker: NextPage = () => {
                     </AlertDialogContent>
                 </AlertDialog>
 
+                {/* Delete class confirmation dialog */}
+                <AlertDialog isOpen={isOpenDelClass} leastDestructiveRef={cancelRef} onClose={onCloseDelClass}>
+                    <AlertDialogOverlay/>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            Delete Class
+                        </AlertDialogHeader>
+                        <AlertDialogBody>
+                            Are you sure you want to delete this class? You can&apos;t undo this action afterwards.
+                        </AlertDialogBody>
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onCloseDelClass}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme="red" onClick={handleDeleteClass} ml={3}>
+                                Delete
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+
                 {/* add class modal */}
                 <Modal isOpen={isOpenAddClass} onClose={onCloseAddClass}>
                     <ModalOverlay/>
@@ -321,7 +369,15 @@ const TaskTracker: NextPage = () => {
                     {user.classes.map((classObject: { _id: React.Key; className: string; tasks: { _id: React.Key; taskName: string; dateDue: string; desc: string; }[]; }) => {
                         return (
                             <Card key={classObject._id} width={'350px'} p={2} m={1} size={"lg"}
-                                  bg={colorMode === "light" ? "gray.300" : "gray.700"} onClick={() => {setClassId(String(classObject?._id || ""))}}>
+                                  bg={colorMode === "light" ? "gray.300" : "gray.700"} onClick={() => {
+                                setClassId(String(classObject?._id || ""))
+                            }}>
+                                <Box>
+                                    <Tooltip label="Delete Class" aria-label="A tooltip">
+                                    <IconButton bg="transparent" aria-label="Delete Class" icon={<CloseIcon/>}
+                                                onClick={onOpenDelClass}/>
+                                    </Tooltip>
+                                </Box>
                                 <CardHeader>
                                     <Flex justifyContent="space-between" alignItems="center">
                                         <Heading>{classObject.className}</Heading>
