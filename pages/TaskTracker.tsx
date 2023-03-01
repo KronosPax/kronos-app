@@ -245,6 +245,7 @@ const TaskTracker: NextPage = () => {
                                 <Input
                                     placeholder="Select Date and Time"
                                     type="datetime-local"
+                                    value={new Date(dateDue).toISOString().slice(0, 16)}
                                     onChange={(e) => setDateDue(e.target.value)}
                                     variant={'filled'}
                                 />
@@ -252,7 +253,7 @@ const TaskTracker: NextPage = () => {
                             <br/>
                             <FormControl display='flex' alignItems='center'>
                                 <FormLabel htmlFor='text-alerts' mb='0'>
-                                    Enable email alerts?
+                                    Enable text alerts?
                                 </FormLabel>
                                 <Switch id='text-alerts' isChecked={isTextAlert} onChange={() => {
                                     setIsTextAlert(!isTextAlert)
